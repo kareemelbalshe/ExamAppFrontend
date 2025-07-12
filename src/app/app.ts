@@ -1,13 +1,20 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Header } from "./layout/header/header";
-import { Footer } from "./layout/footer/footer";
+import { Header } from './layout/header/header';
+import { Footer } from './layout/footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FormsModule, CommonModule, Header, Footer],
+  imports: [
+    RouterOutlet,
+    FormsModule,
+    CommonModule,
+    ReactiveFormsModule,
+    Header,
+    Footer,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

@@ -1,0 +1,33 @@
+/* خلفية الزر العائم */
+.theme-toggle-container {
+  top: 20px;
+  right: 20px;
+  width: 60px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.4s ease;
+  z-index: 999;
+}
+
+body.dark-mode .theme-toggle-container {
+  background-color: #444;
+}
+
+.theme-toggle-circle {
+  width: 29px;
+  height: 29px;
+  background-color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 29px;
+  font-size: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s ease;
+  transform: translateX(30px);
+}
+
+.theme-toggle-circle.move-left {
+  transform: translateX(2px);
+}

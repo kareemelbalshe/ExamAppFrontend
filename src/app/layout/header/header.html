@@ -1,1 +1,65 @@
-<p>header works!</p>
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
+  <a class="navbar-brand" href="#">Exam System</a>
+
+  <ul class="navbar-nav ms-auto d-flex align-items-center">
+    <li class="nav-item mx-1">
+      <a class="nav-link" routerLink="/">{{ 'HOME' | translate }}</a>
+    </li>
+
+    <ng-container *ngIf="!isLoggedIn; else logged">
+      <li class="nav-item mx-1">
+        <a class="nav-link" routerLink="/login">{{ 'LOGIN' | translate }}</a>
+      </li>
+      <li class="nav-item mx-1">
+        <a class="nav-link" routerLink="/register">{{ 'REGISTER' | translate }}</a>
+      </li>
+    </ng-container>
+
+    <ng-template #logged>
+      <li class="nav-item mx-1">
+        <a class="nav-link" (click)="logout()">{{ 'LOGOUT' | translate }}</a>
+      </li>
+    </ng-template>
+
+    <li class="nav-item mx-1">
+      <button class="btn btn-sm btn-outline-secondary" (click)="toggleLang()">
+        {{ 'LANG' | translate }}
+      </button>
+    </li>
+
+    <li class="nav-item mx-1">
+      <button class="btn btn-sm btn-outline-dark" (click)="toggleTheme()">
+        {{ darkMode ? ('LIGHT' | translate) : ('DARK' | translate) }}
+      </button>
+    </li>
+  </ul>
+</nav> -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
+  <a class="navbar-brand" routerLink="/">Exam System</a>
+
+  <a class="nav-link" routerLink="/">Home</a>
+  <ul class="navbar-nav ms-auto d-flex align-items-center">
+    <li class="nav-item mx-1">
+      <div class="theme-toggle-container" (click)="toggleTheme()">
+        <div class="theme-toggle-circle" [class.move-left]="darkMode">
+          {{ darkMode ? "🌞" : "🌙" }}
+        </div>
+      </div>
+    </li>
+    <ng-container *ngIf="!isLoggedIn; else logged">
+      <li class="nav-item mx-1">
+        <a class="nav-link" routerLink="/login">Login</a>
+      </li>
+      <li class="nav-item mx-1">
+        <a class="nav-link" routerLink="/register">Register</a>
+      </li>
+    </ng-container>
+
+    <ng-template #logged>
+      <li class="nav-item mx-1">
+        <a class="nav-link" (click)="logout()">Logout</a>
+      </li>
+    </ng-template>
+  </ul>
+</nav>

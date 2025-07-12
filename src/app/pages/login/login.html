@@ -1,1 +1,25 @@
-<p>login works!</p>
+<form [formGroup]="form" (ngSubmit)="login()">
+  <app-custom-input
+    label="Email"
+    placeholder="Enter your email"
+    [control]="email"
+    icon="fa-envelope"
+    type="email"
+  />
+
+  <app-custom-input
+    label="Password"
+    placeholder="Enter your password"
+    [control]="password"
+    [showToggle]="true"
+    type="password"
+  />
+
+  <app-button
+    text="Login"
+    icon="fa-solid fa-plus"
+    btnStyle="btn-primary"
+    type="submit"
+    (clicked)="login()"
+  ></app-button>
+</form>

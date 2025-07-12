@@ -1,0 +1,29 @@
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.input-icon-group {
+  position: relative;
+}
+
+input {
+  padding: 0.5rem 2.5rem 0.5rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  width: 100%;
+}
+
+input.dark-mode {
+  background-color: #444 !important;
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #999;
+}

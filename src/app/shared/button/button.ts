@@ -1,11 +1,21 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-button',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './button.html',
-  styleUrl: './button.css'
+  styleUrl: './button.css',
+  standalone: true,
 })
 export class Button {
+  @Input() text: string = 'Button';
+  @Input() icon: string = '';
+  @Input() type: 'button' | 'submit' = 'button';
+  @Input() btnStyle: string = 'primary';
+  @Output() clicked = new EventEmitter<void>();
 
+  handleClick() {
+    this.clicked.emit();
+  }
 }
