@@ -1,0 +1,156 @@
+.animated-fade {
+  animation: fadeIn 0.5s ease-in;
+  background: linear-gradient(to bottom right, #f8f9fa, #e8ecf4);
+}
+
+.animated-slide {
+  animation: slideUp 0.4s ease-in;
+}
+
+.slim-textarea {
+  resize: none;
+  overflow: hidden;
+  min-height: 38px;
+  line-height: 1.4;
+  padding-top: 0.75rem;
+  padding-bottom: 0.25rem;
+}
+
+.choice-item-hover {
+  position: relative;
+  transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+.choice-item-hover:hover {
+  /* background-color: #f1f3f5; */
+  transform: translateY(-2px);
+  background-color: #f0f8ff;
+}
+
+.choice-item-hover:hover .correct-toggle-btn,.choice-item-hover:hover .delete-choice-btn{
+  opacity: 1;
+}
+.add-choice-btn {
+  transition: all 0.3s;
+}
+
+.add-choice-btn:hover {
+  background-color: #0d6efd;
+  color: white;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+
+
+
+.correct-toggle-btn {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+  padding: 4px 6px;
+  font-size: 0.9rem;
+}
+
+.delete-choice-btn{
+    opacity: 0;
+}
+
+
+.correct-toggle-btn.btn-success {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.correct-toggle-btn.btn-outline-secondary {
+  border: 1px solid #6c757d;
+  color: #6c757d;
+  background-color: white;
+}
+
+
+
+
+.correct-toggle-btn {
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  border-radius: 8px;
+  padding: 2px 6px;
+  font-size: 0.85rem;
+  height: 28px;
+  width: 28px;
+}
+
+.choice-item-hover:hover .correct-toggle-btn {
+  opacity: 1;
+}
+
+.correct-toggle-btn.btn-success {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.correct-toggle-btn.btn-outline-secondary {
+  border: 1px solid #6c757d;
+  color: #6c757d;
+  background-color: white;
+}
+
+/* Position the toggle halfway between right edge and center */
+.correct-toggle-btn.position-absolute {
+  top: 50%;
+  right: 35%;
+  transform: translateY(-50%);
+}
+
+/* Border for marked correct choices */
+.choice-item-hover.border-success {
+  border: 2px solid #28a745 !important;
+  background-color: #e8f5e9;
+}
+
+
+
+
+/*  *(****************************************************)*  */
+
+
+.correct-toggle-box {
+  height: 28px;
+  width: 28px;
+  padding: 2px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+.correct-toggle-box.btn-success {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.correct-toggle-box.btn-outline-secondary {
+  border: 1px solid #6c757d;
+  color: #6c757d;
+  background-color: white;
+}
+
+/* Highlight for selected correct choices */
+.choice-item-hover.border-success {
+  border: 2px solid #28a745 !important;
+  background-color: #e8f5e9;
+}
