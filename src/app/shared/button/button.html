@@ -1,4 +1,11 @@
-<button [type]="type" class="btn custom-btn" [ngClass]="btnStyle" (click)="handleClick()">
-  <i *ngIf="icon" class="{{ icon }} me-1"></i>
-  {{ text }}
+<button
+  [type]="type"
+  class="btn custom-btn"
+  [ngClass]="btnStyle"
+  (click)="handleClick()"
+  [disabled]="loading"
+>
+  <span class="spinner" *ngIf="loading"></span>
+  <i *ngIf="icon && !loading" class="{{ icon }} me-1"></i>
+  <span *ngIf="!loading">{{ text }}</span>
 </button>

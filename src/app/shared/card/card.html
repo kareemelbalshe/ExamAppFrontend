@@ -1,1 +1,11 @@
-<p>card works!</p>
+<div class="card" [style.borderColor]="color">
+  <div class="card-content">
+    <div class="text">
+      <h3>{{ title }}</h3>
+      <p>{{ value }}</p>
+    </div>
+    <div class="icon" [style.backgroundColor]="color">
+      <i class="{{ icon }}"></i>
+    </div>
+  </div>
+</div>

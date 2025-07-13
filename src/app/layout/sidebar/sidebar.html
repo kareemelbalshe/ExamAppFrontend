@@ -1,1 +1,21 @@
-<p>sidebar works!</p>
+<aside class="sidebar">
+  <ul>
+    <li *ngFor="let item of sidebarItems">
+      <a
+        *ngIf="!item.isLogout; else logoutTemplate"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+      >
+        <span class="material-icons">{{ item.icon }}</span>
+        <span>{{ item.label }}</span>
+      </a>
+
+      <ng-template #logoutTemplate>
+        <a (click)="logout()" class="logout">
+          <span class="material-icons">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </a>
+      </ng-template>
+    </li>
+  </ul>
+</aside>

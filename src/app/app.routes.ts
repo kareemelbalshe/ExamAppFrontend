@@ -15,7 +15,19 @@ export const routes: Routes = [
     component: TakeExam,
     canActivate: [authGuard],
   },
-  { path: 'dashboard', component: AdminDashboard, canActivate: [authGuard] },
+  {
+    path: 'dashboard',
+    component: AdminDashboard,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'exams',
+        loadComponent: () =>
+          import('./pages/admin-dashboard/all-exams/all-exams').then(m => m.AllExams),
+      }
+    ],
+  },
+
   {
     path: 'login',
     component: Login,

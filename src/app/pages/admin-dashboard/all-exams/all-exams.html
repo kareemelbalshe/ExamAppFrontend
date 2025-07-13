@@ -1,1 +1,11 @@
-<p>all-exams works!</p>
+<app-table
+  [columns]="columns"
+  [data]="exams"
+  [actions]="actions"
+  [loading]="loading"
+  [striped]="true"
+  [hoverable]="true"
+  caption="Exams"
+  [itemsPerPage]="5"
+  (actionClick)="onActionClick($event)"
+></app-table>
