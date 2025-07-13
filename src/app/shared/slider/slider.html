@@ -1,1 +1,29 @@
-<p>slider works!</p>
+<!-- <div
+  class="slider"
+  [style.height]="height"
+  [ngClass]="{ 'dark-mode': isDarkMode() }"
+>
+  <div
+    class="slide"
+    *ngFor="let slide of slides; let i = index"
+    [class.active]="i === current"
+  >
+    <img *ngIf="slide.image" [src]="slide.image" alt="Slide" />
+    <div class="content" *ngIf="slide.title || slide.description">
+      <h2 *ngIf="slide.title">{{ slide.title }}</h2>
+      <p *ngIf="slide.description">{{ slide.description }}</p>
+    </div>
+  </div>
+
+  <button *ngIf="showButtons" class="prev" (click)="prev()">❮</button>
+  <button *ngIf="showButtons" class="next" (click)="next()">❯</button>
+
+  <div *ngIf="showIndicators" class="indicators">
+    <span
+      *ngFor="let slide of slides; let j = index"
+      [class.active]="j === current"
+      (click)="goTo(j)"
+    >
+    </span>
+  </div>
+</div> -->

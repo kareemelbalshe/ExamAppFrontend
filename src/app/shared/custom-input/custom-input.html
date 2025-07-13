@@ -1,19 +1,34 @@
-<div class="input-wrapper">
+<div class="input-wrapper" [ngClass]="{ 'has-error': showError() }">
   <label *ngIf="label">{{ label }}</label>
+
   <div class="input-icon-group">
     <input
-      title="Input"
       [type]="inputType"
       [placeholder]="placeholder"
       [formControl]="control"
+      [class.invalid]="showError()"
     />
 
+    <!-- Toggle for password -->
     <span class="icon" *ngIf="showToggle" (click)="toggleShow()">
       <i class="fa" [ngClass]="show ? 'fa-eye-slash' : 'fa-eye'"></i>
     </span>
 
+    <!-- Optional icon -->
     <span class="icon" *ngIf="!showToggle && icon">
       <i class="fa" [ngClass]="icon"></i>
+    </span>
+  </div>
+
+  <!-- Error message -->
+  <div class="error" *ngIf="showError()">
+    <span *ngIf="control?.errors?.['required']">This field is required.</span>
+    <span *ngIf="control?.errors?.['email']">Invalid email format.</span>
+    <span *ngIf="control?.errors?.['minlength']">
+      Minimum {{ control.errors?.['minlength'].requiredLength }} characters.
+    </span>
+    <span *ngIf="control?.errors?.['maxlength']">
+      Max {{ control.errors?.['maxlength'].requiredLength }} characters.
     </span>
   </div>
 </div>

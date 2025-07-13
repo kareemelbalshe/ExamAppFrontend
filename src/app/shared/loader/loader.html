@@ -1,1 +1,8 @@
-<p>loader works!</p>
+<div
+  class="spinner-overlay"
+  *ngIf="loading"
+  [@fade]
+>
+  <div class="spinner"></div>
+  <p class="text">Loading...</p>
+</div>

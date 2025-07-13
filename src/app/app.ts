@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Header } from './layout/header/header';
-import { Footer } from './layout/footer/footer';
+// import { Header } from './layout/header/header';
+// import { Footer } from './layout/footer/footer';
 
 @Component({
   selector: 'app-root',
@@ -12,11 +12,9 @@ import { Footer } from './layout/footer/footer';
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    Header,
-    Footer,
-  ],
+],
   templateUrl: './app.html',
-  styleUrl: './app.css',
+  styleUrls: ['./app.css'],
 })
 export class App {
   protected title = 'Exam System';

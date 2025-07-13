@@ -1,1 +1,13 @@
-<p>not-found works!</p>
+<div class="not-found" [@fadeIn]>
+  <h1>404</h1>
+  <h2>Oops! Page not found.</h2>
+  <p>The page you're looking for doesn’t exist or has been moved.</p>
+
+  <button (click)="goBack()" class="btn">Go Back</button>
+
+  <img
+    src="https://stories.freepiklabs.com/storage/11838/Oops!-404-Error-with-a-Broken-Robot-01.svg"
+    alt="404 Not Found"
+    class="not-found-img"
+  />
+</div>
