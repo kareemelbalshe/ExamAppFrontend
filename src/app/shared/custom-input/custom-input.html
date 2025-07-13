@@ -3,24 +3,22 @@
 
   <div class="input-icon-group">
     <input
+      title="input"
       [type]="inputType"
       [placeholder]="placeholder"
       [formControl]="control"
       [class.invalid]="showError()"
     />
 
-    <!-- Toggle for password -->
     <span class="icon" *ngIf="showToggle" (click)="toggleShow()">
       <i class="fa" [ngClass]="show ? 'fa-eye-slash' : 'fa-eye'"></i>
     </span>
 
-    <!-- Optional icon -->
     <span class="icon" *ngIf="!showToggle && icon">
       <i class="fa" [ngClass]="icon"></i>
     </span>
   </div>
 
-  <!-- Error message -->
   <div class="error" *ngIf="showError()">
     <span *ngIf="control?.errors?.['required']">This field is required.</span>
     <span *ngIf="control?.errors?.['email']">Invalid email format.</span>

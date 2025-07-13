@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-edit-exam',
   imports: [],
   templateUrl: './edit-exam.html',
-  styleUrl: './edit-exam.css'
+  styleUrl: './edit-exam.css',
 })
-export class EditExam {
-
-}
+export class EditExam {}
