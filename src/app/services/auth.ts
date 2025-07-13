@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { environment } from '../environment';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
   constructor(private http: HttpClient) {}
-  private baseUrl = environment.apiUrl;
+  private baseUrl = environment.baseUrl;
   private loggedIn = new BehaviorSubject<boolean>(false);
 
   isLoggedIn$ = this.loggedIn.asObservable();
