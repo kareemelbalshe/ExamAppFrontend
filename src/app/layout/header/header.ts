@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 // import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,9 @@ import { CommonModule } from '@angular/common';
   templateUrl: './header.html',
 })
 export class Header {
+  router = inject(Router);
+  authService = inject(Auth);
+
   isLoggedIn = false;
   darkMode = localStorage.getItem('dark') === 'true';
   // lang = localStorage.getItem('lang') || 'en';
@@ -25,6 +29,10 @@ export class Header {
   // }
   constructor() {
     document.body.classList.toggle('dark-mode', this.darkMode);
+
+    this.authService.isLoggedIn$.subscribe((status) => {
+      this.isLoggedIn = status;
+    });
   }
 
   // toggleLang() {
@@ -40,7 +48,7 @@ export class Header {
   }
 
   logout() {
-    this.isLoggedIn = false;
-    // منطق تسجيل الخروج
+    this.authService.logout();
+    this.router.navigate(['/home']);
   }
 }

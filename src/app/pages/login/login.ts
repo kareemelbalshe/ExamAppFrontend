@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +10,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { CustomInput } from '../../shared/custom-input/custom-input';
 import { Button } from '../../shared/button/button';
+import { Auth } from '../../services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +28,8 @@ import { Button } from '../../shared/button/button';
 })
 export class Login {
   form!: FormGroup;
-
+  auth = inject(Auth);
+  router = inject(Router);
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -44,8 +47,19 @@ export class Login {
 
   login() {
     if (this.form.valid) {
-      console.log('Logging in with:', this.form.value);
-      // هنا تضيف الكول لـ API
+      this.auth.login(this.form.value).subscribe({
+        next: (res) => {
+          this.auth.setLoggedIn(true);
+          if (res.data.role === 'Admin') {
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.router.navigate(['/home']);
+          }
+        },
+        error: (err) => {
+          console.error('Login error:', err);
+        },
+      });
     }
   }
 }
