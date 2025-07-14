@@ -59,6 +59,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'students',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./pages/admin-dashboard/students/students').then(
+            (m) => m.AllStudents
+          ),
+      },
+      {
         path: 'exams/:id',
         component: ShowExam,
       },

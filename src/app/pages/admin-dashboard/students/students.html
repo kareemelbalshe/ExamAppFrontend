@@ -1,6 +1,6 @@
 <div class="page-container">
   <div class="page-header">
-    <h1 class="title">📚 Exams Management</h1>
+    <h1 class="title">🎓 Students Management</h1>
     <p class="description">
       Here you can view, search, add, edit, or delete exams in the system.
     </p>
@@ -16,7 +16,7 @@
     />
 
     <app-button
-      text="Add Exam"
+      text="Add Student"
       icon="fa-solid fa-plus"
       [loading]="loading"
       type="button"
@@ -27,12 +27,12 @@
 
   <app-table
     [columns]="columns"
-    [data]="exams"
+    [data]="students"
     [actions]="actions"
     [loading]="loading"
     [striped]="true"
     [hoverable]="true"
-    [caption]="'Exams'"
+    [caption]="'Students'"
     [paginationInfo]="paginationInfo"
     [useBackendPagination]="true"
     [currentSort]="currentSort"

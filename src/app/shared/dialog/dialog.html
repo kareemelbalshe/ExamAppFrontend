@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>{{ data.title || 'Dialog' }}</h2>
 
 <div mat-dialog-content class="dialog-content">
-  <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
+  <form *ngIf="data.formType === 'exam'" [formGroup]="examForm">
     <mat-form-field appearance="outline" class="form-field">
       <mat-label>Exam Title</mat-label>
       <input matInput formControlName="title" required />
@@ -15,7 +15,6 @@
       <textarea matInput formControlName="description" rows="4"></textarea>
     </mat-form-field>
 
-    <!-- Start Date and Time -->
     <div class="datetime-container">
       <mat-form-field appearance="outline" class="form-field date-field">
         <mat-label>Start Date</mat-label>
@@ -45,7 +44,6 @@
       </mat-form-field>
     </div>
 
-    <!-- End Date and Time -->
     <div class="datetime-container">
       <mat-form-field appearance="outline" class="form-field date-field">
         <mat-label>End Date</mat-label>
@@ -74,25 +72,49 @@
         </mat-error>
       </mat-form-field>
     </div>
+  </form>
 
-    <mat-checkbox formControlName="isActive" class="form-checkbox" readonly>
-      Active
-    </mat-checkbox>
+  <form
+    *ngIf="data.formType === 'student'"
+    [formGroup]="studentForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" required />
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="fill"
+      class="full-width"
+      *ngIf="data.action === 'add'"
+    >
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" />
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button
+        mat-button
+        type="submit"
+        [disabled]="studentForm.invalid || loading"
+      >
+        {{ data.action === 'edit' ? 'Update' : 'Add' }}
+      </button>
+      <button mat-button type="button" (click)="close()">Cancel</button>
+    </div>
   </form>
 </div>
 
-<div mat-dialog-actions class="dialog-actions">
-  <app-button
-    text="Cancel"
-    btnStyle="outline"
-    (clicked)="close()"
-  ></app-button>
-  <app-button
-    [text]="data.action === 'edit' ? 'Update Exam' : 'Add Exam'"
-    [loading]="loading"
-    type="button"
-    btnStyle="primary"
-    [disabled]="examForm.invalid"
-    (click)="onSubmit()"
-  ></app-button>
+<div *ngIf="data.formType === 'exam'" mat-dialog-actions class="dialog-actions">
+  <button mat-button type="button" (click)="close()">Cancel</button>
+
+  <button mat-button type="submit" [disabled]="examForm.invalid || loading">
+    {{ data.action === 'edit' ? 'Update' : 'Add' }}
+  </button>
 </div>

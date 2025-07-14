@@ -1,25 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
-import { Exam } from '../models/exam';
-import { CreateExam } from '../models/dtos/Exam/CreateExam';
-import { environment } from '../environments/environment.development';
+import { environment } from '../../environments/environment.development';
+import { CreateStudent, Student } from '../../models/user';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ExamService {
-  private baseUrl = `${environment.baseUrl}/Exam`;
+export class StudentService {
+  private baseUrl = `${environment.baseUrl}/User`;
 
   constructor(private http: HttpClient) { }
 
-  getAllExams(
+  getAllStudents(
     name: string = '',
     sortBy: string = 'id',
     isDesc: boolean = false,
     page: number = 1,
     pageSize: number = 5,
-    isActive?: boolean
+    isDeleted?: boolean
   ): Observable<any> {
     const params: any = {
       name,
@@ -29,16 +28,16 @@ export class ExamService {
       pageSize
     };
 
-    if (isActive !== undefined) {
-      params.isActive = isActive;
+    if (isDeleted !== undefined) {
+      params.isDeleted = isDeleted;
     }
 
     return this.http.get<any>(this.baseUrl, { params }).pipe(
-      tap(response => console.log('📦 Full API Response:', response)),
+      tap(response => console.log('📦 Students API Response:', response)),
       map(res => {
         const data = res?.data;
         return {
-          items: data?.data?.$values || [], 
+          items: data?.data?.$values || [],
           totalItems: data?.totalCount || 0,
           totalPages: Math.ceil((data?.totalCount || 0) / pageSize),
           currentPage: data?.page || 1,
@@ -48,21 +47,21 @@ export class ExamService {
     );
   }
 
-  getExamById(id: number): Observable<Exam> {
+  getStudentById(id: number): Observable<Student> {
     return this.http.get<any>(`${this.baseUrl}/${id}`).pipe(
       map(res => res?.data)
     );
   }
 
-  addExam(exam: CreateExam): Observable<Exam> {
-    return this.http.post<Exam>(this.baseUrl, exam);
+  addStudent(student: CreateStudent): Observable<Student> {
+    return this.http.post<Student>(this.baseUrl, student);
   }
 
-  updateExam(id: number, exam: CreateExam): Observable<Exam> {
-    return this.http.put<Exam>(`${this.baseUrl}/${id}`, exam);
+  updateStudent(id: number, student: CreateStudent): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, student);
   }
 
-  deleteExam(id: number): Observable<void> {
+  deleteStudent(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

@@ -48,12 +48,17 @@
 }
 
 .confirm {
-  background-color: #e23a3a;
   color: white;
 }
+.confirm-success {
+  background: linear-gradient(to right, #28a745, #218838);
 
-.confirm:hover {
-  background-color: #e87575;
+}
+.confirm-success:hover {
+  background: linear-gradient(to right, #218838, #28a745);
+}
+.confirm-danger {
+  background-color: #e23a3a;
 }
 
 .cancel {
