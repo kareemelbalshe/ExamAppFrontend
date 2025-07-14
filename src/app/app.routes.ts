@@ -10,6 +10,9 @@ import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
 import { authGuard } from './guards/auth-guard';
 import { EditQuestion } from './pages/admin-dashboard/edit-question/edit-question';
 import { MainLayout } from './layout/main-layout/main-layout';
+import { ShowResult } from './pages/show-result/show-result';
+import { isAdminGuard } from './guards/is-admin-guard';
+import { Profile } from './pages/profile/profile';
 
 export const routes: Routes = [
   {
@@ -18,11 +21,6 @@ export const routes: Routes = [
     children: [
       { path: '', component: Home },
       {
-        path: 'take-exam',
-        component: TakeExam,
-        canActivate: [authGuard],
-      },
-      {
         path: 'login',
         component: Login,
       },
@@ -30,13 +28,24 @@ export const routes: Routes = [
         path: 'register',
         component: Register,
       },
+      { path: 'profile', component: Profile, canActivate: [authGuard] },
+      {
+        path: 'show-result/:resultId',
+        component: ShowResult,
+        canActivate: [authGuard],
+      },
     ],
+  },
+  {
+    path: 'take-exam/:examId',
+    component: TakeExam,
+    canActivate: [authGuard],
   },
 
   {
     path: 'dashboard',
     component: AdminDashboard,
-    canActivate: [authGuard],
+    canActivate: [authGuard, isAdminGuard],
     children: [
       {
         path: 'exams',

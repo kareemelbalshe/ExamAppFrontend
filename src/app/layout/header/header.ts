@@ -1,5 +1,4 @@
-import { Component, inject } from '@angular/core';
-// import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../../services/auth';
@@ -7,39 +6,26 @@ import { Auth } from '../../services/auth';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [
-    // TranslateModule,
-    RouterModule,
-    CommonModule,
-  ],
+  imports: [RouterModule, CommonModule],
   styleUrls: ['./header.css'],
   templateUrl: './header.html',
 })
-export class Header {
+export class Header implements OnInit {
   router = inject(Router);
   authService = inject(Auth);
-
   isLoggedIn = false;
   darkMode = localStorage.getItem('dark') === 'true';
-  // lang = localStorage.getItem('lang') || 'en';
 
-  // constructor(private translate: TranslateService) {
-  //   this.translate.use(this.lang);
-  //   document.body.classList.toggle('dark-mode', this.darkMode);
-  // }
   constructor() {
     document.body.classList.toggle('dark-mode', this.darkMode);
+  }
 
+  ngOnInit() {
+    // ✅ استمع لتغيرات الدخول/الخروج
     this.authService.isLoggedIn$.subscribe((status) => {
       this.isLoggedIn = status;
     });
   }
-
-  // toggleLang() {
-  //   this.lang = this.lang === 'en' ? 'ar' : 'en';
-  //   localStorage.setItem('lang', this.lang);
-  //   this.translate.use(this.lang);
-  // }
 
   toggleTheme() {
     this.darkMode = !this.darkMode;
@@ -49,6 +35,6 @@ export class Header {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
   }
 }

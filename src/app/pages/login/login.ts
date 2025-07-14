@@ -12,7 +12,6 @@ import { CustomInput } from '../../shared/custom-input/custom-input';
 import { Button } from '../../shared/button/button';
 import { Auth } from '../../services/auth';
 import { Router } from '@angular/router';
-import { Toast } from '../../shared/toast/toast';
 import { ToastService } from '../../shared/toast/toast.service';
 
 @Component({
@@ -26,7 +25,6 @@ import { ToastService } from '../../shared/toast/toast.service';
     CommonModule,
     CustomInput,
     Button,
-    Toast
   ],
 })
 export class Login {
@@ -55,22 +53,18 @@ export class Login {
       this.isLoading = true;
       this.auth.login(this.form.value).subscribe({
         next: (res) => {
-          this.auth.setLoggedIn(true);
-          const redirectTo = res.data.role === 'Admin' ? '/dashboard' : '/home';
+          const redirectTo = res.data.role === 'Admin' ? '/dashboard' : '/';
           this.router.navigate([redirectTo]);
-          this.toast.show('Logged in successfully!', 'success');
           this.isLoading = false;
         },
         error: (err) => {
           this.isLoading = false;
           console.error('Login error:', err);
-          this.toast.show('Invalid email or password', 'error');
         }
       });
     } else {
       this.isLoading = false;
       this.form.markAllAsTouched();
-      this.toast.show('Please fill all required fields.', 'warning');
     }
   }
 }
