@@ -12,6 +12,7 @@ import { CreateExam } from '../../../models/dtos/Exam/CreateExam';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-exams',
@@ -52,7 +53,8 @@ export class AllExams implements OnInit {
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
     public confirm: ConfirmService,
-    private toast: ToastService
+    private toast: ToastService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -191,6 +193,9 @@ export class AllExams implements OnInit {
   }
 
   private viewExam(exam: Exam) {
-    console.log('View exam:', exam);
+    if (exam?.id) 
+      this.router.navigateByUrl(`/dashboard/exams/${exam.id}`);
   }
+
+  
 }

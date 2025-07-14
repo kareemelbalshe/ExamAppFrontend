@@ -9,6 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Choice } from '../../../models/choice';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Confirm } from '../../../shared/confirm/confirm';
+import { ExamService } from '../../../services/exam.service';
+import { Exam } from '../../../models/exam';
 
 @Component({
   selector: 'app-show-exam',
@@ -34,9 +36,11 @@ export class ShowExam implements OnInit {
   isLoading = false;
   error = '';
   expandedQuestionIds = new Set<number>();
+  exam?: Exam;
 
   constructor(
     private questionsService: QuestionService,
+    private examService: ExamService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
@@ -46,10 +50,27 @@ export class ShowExam implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.examId = +params['id'];
+      this.loadExam();
       this.loadQuestions();
     });
   }
-
+  loadExam(){
+    this.isLoading = true;
+    this.examService.getExamById(this.examId).subscribe({
+      next: (exam) => {
+        console.log('Exam loaded:', exam);
+        this.exam = exam;
+        this.isLoading = false;
+        this.cdr.detectChanges(); // Ensure view updates after async operation
+      },
+      error: (err) => {
+        console.error('Failed to load exam', err);
+        this.error = 'Failed to load exam';
+        this.isLoading = false;
+        this.cdr.detectChanges(); // Ensure view updates after error
+      }
+    });
+  }
   loadQuestions() {
     this.isLoading = true;
     let x = this.questionsService.getQuestionsByExamIdWithChoices(this.examId).subscribe({
