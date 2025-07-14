@@ -10,6 +10,7 @@ import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
 import { authGuard } from './guards/auth-guard';
 import { EditQuestion } from './pages/admin-dashboard/edit-question/edit-question';
 import { MainLayout } from './layout/main-layout/main-layout';
+import { ShowExam } from './pages/admin-dashboard/show-exam/show-exam';
 
 export const routes: Routes = [
   {
@@ -40,10 +41,15 @@ export const routes: Routes = [
     children: [
       {
         path: 'exams',
+        pathMatch: 'full',
         loadComponent: () =>
           import('./pages/admin-dashboard/all-exams/all-exams').then(
             (m) => m.AllExams
           ),
+      },
+      {
+        path: 'exams/:id',
+        component: ShowExam,
       },
       {
         path: 'question/add/:examId',
