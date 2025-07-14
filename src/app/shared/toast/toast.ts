@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastService } from './toast.service';
 
@@ -19,7 +19,10 @@ export class Toast {
   private queue: { msg: string; type: ToastType; duration: number }[] = [];
   private isShowing = false;
 
-  constructor(private toastService: ToastService) {
+  constructor(
+    private toastService: ToastService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.toastService.register(this);
   }
 
@@ -36,11 +39,13 @@ export class Toast {
     this.icon = this.getIcon(type);
     this.visible = true;
     this.isShowing = true;
+    this.cdr.detectChanges();
 
     setTimeout(() => {
       this.visible = false;
       this.isShowing = false;
-      setTimeout(() => this.next(), 300); // wait for fadeOut
+      this.cdr.detectChanges();
+      setTimeout(() => this.next(), 300);
     }, duration);
   }
 

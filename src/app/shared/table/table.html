@@ -1,52 +1,54 @@
 <div class="table-wrapper" [class.dark-mode]="isDarkMode">
   <div *ngIf="caption" class="caption">{{ caption }}</div>
 
-  <!-- Container with relative position to place loader properly -->
-  <div class="table-body-wrapper" style="position: relative; min-height: 150px;">
-    
-    <!-- Loader inside table only -->
-    <div *ngIf="loading" class="table-loader-overlay">
-      <span class="spinner"></span>
-    </div>
-
-    <!-- Table Header -->
-    <div *ngIf="!loading">
-      <div class="table-row header">
-        <div class="table-cell" *ngFor="let col of columns">
-          {{ col.label }}
-        </div>
-        <div class="table-cell actions" *ngIf="actions.length > 0">Actions</div>
+  <!-- Wrap for horizontal scroll -->
+  <div class="scroll-container">
+    <div class="table-body-wrapper" style="position: relative; min-height: 150px;">
+      
+      <!-- Loader inside table only -->
+      <div *ngIf="loading" class="table-loader-overlay">
+        <span class="spinner"></span>
       </div>
 
-      <!-- Table Rows -->
-      <div
-        *ngFor="let row of paginatedData; let i = index"
-        class="table-row"
-        [style.animationDelay.ms]="i * 100"
-      >
-        <div class="table-cell" *ngFor="let col of columns">
-          <ng-container [ngSwitch]="col.pipe">
-            <span *ngSwitchCase="'date'">{{ row[col.field] | date: 'short' }}</span>
-            <span *ngSwitchDefault>{{ row[col.field] }}</span>
-          </ng-container>
+      <!-- Table Header -->
+      <div *ngIf="!loading">
+        <div class="table-row header">
+          <div class="table-cell" *ngFor="let col of columns">
+            {{ col.label }}
+          </div>
+          <div class="table-cell actions" *ngIf="actions.length > 0">Actions</div>
         </div>
 
-        <div class="table-cell actions" *ngIf="actions.length > 0">
-          <button
-            *ngFor="let action of actions"
-            (click)="handleActionClick(action.type, row)"
-            [title]="action.tooltip || action.type"
-            class="action-btn"
-            [style.color]="action.color || '#007bff'"
-          >
-            <i [class]="action.icon"></i>
-          </button>
-        </div>
-      </div>
+        <!-- Table Rows -->
+        <div
+          *ngFor="let row of paginatedData; let i = index"
+          class="table-row"
+          [style.animationDelay.ms]="i * 100"
+        >
+          <div class="table-cell" *ngFor="let col of columns">
+            <ng-container [ngSwitch]="col.pipe">
+              <span *ngSwitchCase="'date'">{{ row[col.field] | date: 'short' }}</span>
+              <span *ngSwitchDefault>{{ row[col.field] }}</span>
+            </ng-container>
+          </div>
 
-      <!-- No data -->
-      <div *ngIf="paginatedData.length === 0" class="no-data">
-        No data available
+          <div class="table-cell actions" *ngIf="actions.length > 0">
+            <button
+              *ngFor="let action of actions"
+              (click)="handleActionClick(action.type, row)"
+              [title]="action.tooltip || action.type"
+              class="action-btn"
+              [style.color]="action.color || '#007bff'"
+            >
+              <i [class]="action.icon"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- No data -->
+        <div *ngIf="paginatedData.length === 0" class="no-data">
+          No data available
+        </div>
       </div>
     </div>
   </div>

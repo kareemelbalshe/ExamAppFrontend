@@ -1,0 +1,98 @@
+<h2 mat-dialog-title>{{ data.title || 'Dialog' }}</h2>
+
+<div mat-dialog-content class="dialog-content">
+  <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Exam Title</mat-label>
+      <input matInput formControlName="title" required />
+      <mat-error *ngIf="examForm.get('title')?.hasError('required')">
+        Title is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="4"></textarea>
+    </mat-form-field>
+
+    <!-- Start Date and Time -->
+    <div class="datetime-container">
+      <mat-form-field appearance="outline" class="form-field date-field">
+        <mat-label>Start Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="startDatePicker"
+          formControlName="startDate"
+          required
+          readonly
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="startDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+        <mat-error *ngIf="examForm.get('startDate')?.hasError('required')">
+          Start date is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field time-field">
+        <mat-label>Start Time</mat-label>
+        <input matInput type="time" formControlName="startTime" required />
+        <mat-error *ngIf="examForm.get('startTime')?.hasError('required')">
+          Start time is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- End Date and Time -->
+    <div class="datetime-container">
+      <mat-form-field appearance="outline" class="form-field date-field">
+        <mat-label>End Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="endDatePicker"
+          formControlName="endDate"
+          required
+          readonly
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="endDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+        <mat-error *ngIf="examForm.get('endDate')?.hasError('required')">
+          End date is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field time-field">
+        <mat-label>End Time</mat-label>
+        <input matInput type="time" formControlName="endTime" required />
+        <mat-error *ngIf="examForm.get('endTime')?.hasError('required')">
+          End time is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-checkbox formControlName="isActive" class="form-checkbox" readonly>
+      Active
+    </mat-checkbox>
+  </form>
+</div>
+
+<div mat-dialog-actions class="dialog-actions">
+  <app-button
+    text="Cancel"
+    btnStyle="outline"
+    (clicked)="close()"
+  ></app-button>
+  <app-button
+    [text]="data.action === 'edit' ? 'Update Exam' : 'Add Exam'"
+    [loading]="loading"
+    type="button"
+    btnStyle="primary"
+    [disabled]="examForm.invalid"
+    (click)="onSubmit()"
+  ></app-button>
+</div>
