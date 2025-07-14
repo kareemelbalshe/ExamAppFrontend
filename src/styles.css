@@ -23,3 +23,6 @@ body.dark-mode input:focus {
   border-color: #4caf50;
   box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

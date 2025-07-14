@@ -23,7 +23,6 @@ export class Table implements OnChanges {
   currentPage: number = 1;
   private document = inject(DOCUMENT);
 
-  // إضافة OnChanges للـ debugging
   ngOnChanges(changes: SimpleChanges) {
     if (changes['data']) {
       console.log('🔍 Table received data:', this.data);

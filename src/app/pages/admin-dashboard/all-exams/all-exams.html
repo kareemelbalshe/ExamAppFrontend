@@ -1,11 +1,39 @@
-<app-table
-  [columns]="columns"
-  [data]="exams"
-  [actions]="actions"
-  [loading]="loading"
-  [striped]="true"
-  [hoverable]="true"
-  caption="Exams"
-  [itemsPerPage]="5"
-  (actionClick)="onActionClick($event)"
-></app-table>
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="title">📚 Exams Management</h1>
+    <p class="description">
+      Here you can view, search, add, edit, or delete exams in the system.
+    </p>
+  </div>
+
+  <div class="flex justify-between items-center w-100">
+    <app-custom-input
+      placeholder="Search..."
+      [control]="searchTerm"
+      icon="fa-solid fa-magnifying-glass"
+      type="text"
+      class="search-input"
+    />
+
+    <app-button
+      text=" Add Exam"
+      icon="fa-solid fa-plus"
+      [loading]="loading"
+      type="button"
+      class="add-button"
+      (click)="openDialog()"
+    ></app-button>
+  </div>
+
+  <app-table
+    [columns]="columns"
+    [data]="exams"
+    [actions]="actions"
+    [loading]="loading"
+    [striped]="true"
+    [hoverable]="true"
+    caption="Exams"
+    [itemsPerPage]="5"
+    (actionClick)="onActionClick($event)"
+  ></app-table>
+</div>

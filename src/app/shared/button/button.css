@@ -15,8 +15,8 @@
 }
 
 .custom-btn:hover {
-  background: linear-gradient(to right, #218838, #28a745);
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+  /* background: linear-gradient(to right, #218838, #28a745); */
+  /* box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6); */
   transform: translateY(-1px);
   cursor: pointer;
 }
@@ -26,6 +26,31 @@
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, #28a745, #218838);
+  color: white;
+  border: 1px solid #218838;
+  box-shadow: 0 4px 14px rgba(40, 167, 69, 0.4);
+}
+.btn-primary:hover {
+  background: linear-gradient(to right, #218838, #28a745);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+  transform: translateY(-1px);
+  cursor: pointer;
+}
+.btn-outline {
+  background: transparent;
+  border: 2px solid #28a745;
+  color: #28a745;
+  box-shadow: 0 0px 0px rgba(40, 167, 69, 0.4);
+}
+.btn-outline:hover {
+  background-color: #28a745;
+  /* transform: translateY(-1px); */
+  color: #fff;
+  cursor: pointer;
 }
 
 .spinner {
