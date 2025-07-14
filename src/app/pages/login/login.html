@@ -17,9 +17,10 @@
 
   <app-button
     text="Login"
-    icon="fa-solid fa-plus"
-    btnStyle="dhasgiodhafodhp"
+    icon="fa-solid fa-right-to-bracket"
+    [loading]="isLoading"
     type="submit"
-    (clicked)="login()"
   ></app-button>
 </form>
+
+<app-toast></app-toast>

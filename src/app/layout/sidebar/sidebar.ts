@@ -1,11 +1,29 @@
-import { Component } from '@angular/core';
+import { SidebarItem } from './sidebar.model';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [],
   templateUrl: './sidebar.html',
-  styleUrl: './sidebar.css'
+  imports: [CommonModule, RouterModule],
+  styleUrls: ['./sidebar.css'],
 })
-export class Sidebar {
+export class SidebarComponent {
+  router = inject(Router);
+  authService = inject(Auth);
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/home']);
+  }
 
+  sidebarItems: SidebarItem[] = [
+    { label: 'Dashboard', icon: 'dashboard', route: '/dashboard/statistics' },
+    { label: 'Exams', icon: 'assignment', route: '/dashboard/exams' },
+    { label: 'Questions', icon: 'help', route: '/dashboard/questions' },
+    { label: 'Results', icon: 'bar_chart', route: '/dashboard/results' },
+    { label: 'Students', icon: 'group', route: '/dashboard/students' },
+    { label: 'Logout', icon: 'logout', isLogout: true },
+  ];
 }

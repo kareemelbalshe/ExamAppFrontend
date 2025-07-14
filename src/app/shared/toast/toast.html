@@ -1,0 +1,12 @@
+<div
+  class="toast"
+  [ngClass]="[
+    visible ? 'show' : '',
+    type,
+    isDarkMode() ? 'dark-mode' : ''
+  ]"
+>
+  <span class="icon">{{ icon }}</span>
+  <span class="message">{{ message }}</span>
+  <button class="close-btn" (click)="close()">×</button>
+</div>

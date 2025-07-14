@@ -1,11 +1,13 @@
-<div class="input-wrapper">
+<div class="input-wrapper" [ngClass]="{ 'has-error': showError() }">
   <label *ngIf="label">{{ label }}</label>
+
   <div class="input-icon-group">
     <input
-      title="Input"
+      title="input"
       [type]="inputType"
       [placeholder]="placeholder"
       [formControl]="control"
+      [class.invalid]="showError()"
     />
 
     <span class="icon" *ngIf="showToggle" (click)="toggleShow()">
@@ -14,6 +16,17 @@
 
     <span class="icon" *ngIf="!showToggle && icon">
       <i class="fa" [ngClass]="icon"></i>
+    </span>
+  </div>
+
+  <div class="error" *ngIf="showError()">
+    <span *ngIf="control?.errors?.['required']">This field is required.</span>
+    <span *ngIf="control?.errors?.['email']">Invalid email format.</span>
+    <span *ngIf="control?.errors?.['minlength']">
+      Minimum {{ control.errors?.['minlength'].requiredLength }} characters.
+    </span>
+    <span *ngIf="control?.errors?.['maxlength']">
+      Max {{ control.errors?.['maxlength'].requiredLength }} characters.
     </span>
   </div>
 </div>

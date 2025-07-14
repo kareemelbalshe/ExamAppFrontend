@@ -23,6 +23,11 @@ input {
   background-color: #fff;
 }
 
+input.invalid {
+  border-color: #dc3545;
+  background-color: #fff5f5;
+}
+
 input:focus {
   border-color: #28a745;
   box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
@@ -41,4 +46,25 @@ input:focus {
 
 .icon:hover {
   color: #28a745;
+}
+
+.error {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
+.has-error input {
+  border-color: #dc3545;
+}
+
+/* Dark Mode Support */
+body.dark-mode input {
+  background-color: #2d2d2d !important;
+  color: #f1f1f1;
+  border-color: #555;
+}
+
+body.dark-mode .error {
+  color: #ff6b6b;
 }

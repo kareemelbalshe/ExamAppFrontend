@@ -1,1 +1,73 @@
-<p>table works!</p>
+<div class="table-wrapper" [class.dark-mode]="isDarkMode">
+  <div *ngIf="caption" class="caption">{{ caption }}</div>
+
+  <!-- Container with relative position to place loader properly -->
+  <div class="table-body-wrapper" style="position: relative; min-height: 150px;">
+    
+    <!-- Loader inside table only -->
+    <div *ngIf="loading" class="table-loader-overlay">
+      <span class="spinner"></span>
+    </div>
+
+    <!-- Table Header -->
+    <div *ngIf="!loading">
+      <div class="table-row header">
+        <div class="table-cell" *ngFor="let col of columns">
+          {{ col.label }}
+        </div>
+        <div class="table-cell actions" *ngIf="actions.length > 0">Actions</div>
+      </div>
+
+      <!-- Table Rows -->
+      <div
+        *ngFor="let row of paginatedData; let i = index"
+        class="table-row"
+        [style.animationDelay.ms]="i * 100"
+      >
+        <div class="table-cell" *ngFor="let col of columns">
+          <ng-container [ngSwitch]="col.pipe">
+            <span *ngSwitchCase="'date'">{{ row[col.field] | date: 'short' }}</span>
+            <span *ngSwitchDefault>{{ row[col.field] }}</span>
+          </ng-container>
+        </div>
+
+        <div class="table-cell actions" *ngIf="actions.length > 0">
+          <button
+            *ngFor="let action of actions"
+            (click)="handleActionClick(action.type, row)"
+            [title]="action.tooltip || action.type"
+            class="action-btn"
+            [style.color]="action.color || '#007bff'"
+          >
+            <i [class]="action.icon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- No data -->
+      <div *ngIf="paginatedData.length === 0" class="no-data">
+        No data available
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination center" *ngIf="totalPages > 1">
+    <button (click)="changePage(-1)" [disabled]="currentPage === 1">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+      <button
+        [class.active]="currentPage === i + 1"
+        (click)="currentPage = i + 1"
+      >
+        {{ i + 1 }}
+      </button>
+    </ng-container>
+
+    <button (click)="changePage(1)" [disabled]="currentPage === totalPages">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>

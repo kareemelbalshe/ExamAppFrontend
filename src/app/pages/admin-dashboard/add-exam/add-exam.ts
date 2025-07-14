@@ -5,8 +5,4 @@ import { Component } from '@angular/core';
   templateUrl: './add-exam.html',
   styleUrls: ['./add-exam.css'],
 })
-
-
-
-
 export class AddExam {}

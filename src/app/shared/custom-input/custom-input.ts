@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-custom-input',
   standalone: true,
   templateUrl: './custom-input.html',
-  styleUrl: './custom-input.css',
+  styleUrls: ['./custom-input.css'],
   imports: [CommonModule, ReactiveFormsModule],
 })
 export class CustomInput {
@@ -25,5 +25,9 @@ export class CustomInput {
 
   toggleShow() {
     this.show = !this.show;
+  }
+
+  showError() {
+    return this.control?.invalid && this.control?.touched;
   }
 }

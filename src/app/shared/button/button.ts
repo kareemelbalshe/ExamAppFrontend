@@ -3,19 +3,20 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-button',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './button.html',
-  styleUrl: './button.css',
-  standalone: true,
+  styleUrls: ['./button.css'],
 })
 export class Button {
   @Input() text: string = 'Button';
   @Input() icon: string = '';
   @Input() type: 'button' | 'submit' = 'button';
   @Input() btnStyle: string = 'primary';
+  @Input() loading: boolean = false;
   @Output() clicked = new EventEmitter<void>();
 
   handleClick() {
-    this.clicked.emit();
+    if (!this.loading) this.clicked.emit();
   }
 }

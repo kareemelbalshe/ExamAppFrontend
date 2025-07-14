@@ -7,7 +7,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Button } from "../../../shared/button/button";
+import { Button } from '../../../shared/button/button';
 import { QuestionService } from '../../../services/question/question-service';
 import { ChoiceService } from '../../../services/choice/choice-service';
 import { QuestionDto } from '../../../models/dtos/question/choice-dto';
@@ -24,16 +24,20 @@ import { ConfirmService } from '../../../shared/confirm/confirm.service';
     trigger('fadeSlide', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+        animate(
+          '300ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
       ]),
       transition(':leave', [
-        animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(20px)' })),
+        animate(
+          '300ms ease-in',
+          style({ opacity: 0, transform: 'translateY(20px)' })
+        ),
       ]),
     ]),
   ],
-
 })
-
 
 export class AddQuestion {
   @Input() isEditMode = false;
@@ -54,7 +58,7 @@ export class AddQuestion {
   deletedChoiceIds: number[] = [];
   originalQuestionText = '';
 
- 
+
 
   constructor(
     private questionService: QuestionService,
@@ -67,16 +71,18 @@ export class AddQuestion {
 
   ngOnInit() {
     console.log('AddQuestion component being initialized');
+
     this.route.data.subscribe((data) => {
       this.isEditMode = data['isEditMode'] === true;
       if (this.isEditMode)
-        this.route.paramMap.subscribe(params => {
+        this.route.paramMap.subscribe((params) => {
           this.questionId = +params.get('id')!;
-          this.loadQuestionForEdit(this.questionId ? Number(this.questionId) : 0);
-
+          this.loadQuestionForEdit(
+            this.questionId ? Number(this.questionId) : 0
+          );
         });
       else {
-        this.route.paramMap.subscribe(params => {
+        this.route.paramMap.subscribe((params) => {
           this.examId = +params.get('examId')!;
           console.log('Exam ID:', this.examId);
           this.questionText = '';
@@ -85,16 +91,17 @@ export class AddQuestion {
       }
       console.log('Edit mode:', this.isEditMode);
     });
-
   }
 
   async loadQuestionForEdit(questionId: number) {
+
     this.questionService.getQuestion(questionId).subscribe({
       next: (response) => {
         this.questionText = response.data.text;
         this.originalQuestionText = response.data.text;
         console.log('Question loaded:', this.questionText);
         if (response.data.id) this.loadChoicesForEdit(response.data.id);
+
         this.cdr.detectChanges(); 
       },
       error: (err) => {
@@ -117,7 +124,10 @@ export class AddQuestion {
   }
 
   addChoice() {
-    let isEmptyCell = this.choices[this.choices.length - 1]?.text?.trim() ?? '' != '' ? false : true;
+    let isEmptyCell =
+      this.choices[this.choices.length - 1]?.text?.trim() ?? '' != ''
+        ? false
+        : true;
     if (isEmptyCell && this.choices.length > 0) {
       alert('Please fill the last choice before adding a new one.');
       return;
@@ -129,7 +139,7 @@ export class AddQuestion {
     if (choice.id) {
       this.deletedChoiceIds.push(choice.id);
     }
-    this.choices = this.choices.filter(c => c != choice);
+    this.choices = this.choices.filter((c) => c != choice);
   }
 
   markChoiceAsUpdated(choice: Choice) {
@@ -145,6 +155,7 @@ export class AddQuestion {
 
   onCreate() {
     console.log(this.questionText,this.questionTextControl)
+
     if (!this.examId) {
       this.confirmService.show('','Exam ID is required to create a question.',()=>{this.router.navigateByUrl('/admin-dashboard/exams');});
       return;
@@ -163,11 +174,13 @@ export class AddQuestion {
     console.log('Creating question with text:', this.questionTextControl);
     let createQuestionDto: CreateQuestionDto = {
       text: this.questionTextControl.value ?? '',
+
       choices: this.choices.map(
         (choice): ChoiceDto => ({
           text: choice.text,
           isCorrect: choice.isCorrect ?? false,
           questionId: this.questionId ? Number(this.questionId) : 0, 
+
         })
       ),
       examId: this.examId,
@@ -182,7 +195,7 @@ export class AddQuestion {
         }
         );
       },
-      error: async(err) => {
+      error: async (err) => {
         console.error('Error creating question:', await err.message);
         alert('Failed to create question. Please try again.');
       },
@@ -214,6 +227,7 @@ export class AddQuestion {
           text: c.text,
         })
       ), 
+
     };
 
     this.questionService
@@ -224,6 +238,7 @@ export class AddQuestion {
           this.confirmService.show('Success','Question updated successfully!',()=>{
             this.router.navigate(['/admin-dashboard/questions']);
           });
+
         },
         error: (err) => {
           console.error('Error updating question:', err);
@@ -231,13 +246,16 @@ export class AddQuestion {
         },
       });
   }
+  
   toggleCorrect(choice: Choice) {
     choice.isCorrect = !choice.isCorrect;
     this.markChoiceAsUpdated(choice);
   }
   getChoiceLabel(index: number): string {
+
     return String.fromCharCode(65 + index); 
   }
+  
   isValidData(): {isValid:boolean, message:string} {
     if(!this.questionTextControl.valid) 
       return {isValid:false, message:'Question text is required.'};
@@ -254,6 +272,7 @@ export class AddQuestion {
       return {isValid:false, message:'At least one choice must be marked as correct.'};
 
     return {isValid:true, message:'Valid data'};
+
 
   }
 }
