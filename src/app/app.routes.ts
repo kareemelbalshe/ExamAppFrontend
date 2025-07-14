@@ -51,8 +51,8 @@ export const routes: Routes = [
         data: { isEditMode: false },
       },
       {
-        path: 'question/edit/:examId',
-        component: EditQuestion,
+        path: 'question/edit/:id',
+        component: AddQuestion,
         data: { isEditMode: true },
       },
     ],
