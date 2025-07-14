@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment.development';
 import { Choice } from '../../models/choice';
 import { ChoiceDto } from '../../models/dtos/choice/create-choice-dto';
 import { CreateQuestionDto } from '../../models/dtos/question/create-question-dto';
-import { QuestionDto } from '../../models/dtos/question/choice-dto';
+import { QuestionDto } from '../../models/dtos/question/question-dto';
 
 
 
@@ -16,23 +16,26 @@ import { QuestionDto } from '../../models/dtos/question/choice-dto';
 })
 
 export class QuestionService {
-  private apiUrl = environment.baseUrl;
+  private apiUrl = environment.baseUrl + '/question';
 
   constructor(private http: HttpClient) { }
 
   // CREATE
   createQuestion(payload: CreateQuestionDto ): Observable<any> {
-    return this.http.post(`${this.apiUrl}/question/`, payload);
+    return this.http.post(`${this.apiUrl}`, payload);
   }
 
   // READ (optional example)
   getQuestion(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/question/${id}`);
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+  getQuestionsByExamIdWithChoices(examId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/by-exam/detailed/${examId}`);
   }
 
   // UPDATE
   updateQuestion(id: number, question: QuestionDto): Observable<any> {
-    return this.http.put(`${this.apiUrl}/question/${id}`, question);
+    return this.http.put(`${this.apiUrl}/${id}`, question);
   }
 
   // DELETE

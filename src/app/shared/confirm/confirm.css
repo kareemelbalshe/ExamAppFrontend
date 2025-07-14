@@ -48,12 +48,12 @@
 }
 
 .confirm {
-  background-color: #4caf50;
+  background-color: #e23a3a;
   color: white;
 }
 
 .confirm:hover {
-  background-color: #43a047;
+  background-color: #e87575;
 }
 
 .cancel {
@@ -87,5 +87,5 @@
 }
 
 .dark-mode .confirm {
-  background-color: #66bb6a;
+  background-color: #e23a3a;
 }

@@ -5,9 +5,14 @@
 
                 <!-- Question Text -->
                 <div class="form-floating mb-4">
-                    <textarea id="questionText" [(ngModel)]="questionText" name="questionText" required
+                    <!-- <textarea id="questionText" [(ngModel)]="questionText" name="questionText" required
                         class="form-control slim-textarea" placeholder="Enter question here" rows="1"></textarea>
-                    <label for="questionText">Question Text</label>
+                    <label for="questionText">Question Text</label> -->
+                      <app-custom-input
+                            [label]="'Question Text'"
+                            placeholder="Enter your question"
+                            [control]="questionTextControl"
+                        />
                 </div>
 
                 <!-- Choices Section -->
@@ -32,6 +37,7 @@
                         <input [(ngModel)]="choice.text" name="choice{{choice.id??i}}"
                             (ngModelChange)="markChoiceAsUpdated(choice)" required
                             class="form-control me-2 border-0 bg-white shadow-none" />
+                      
 
                         <!-- Delete Choice -->
                         <button type="button" class="btn btn-outline-danger btn-sm rounded-circle ms-2"

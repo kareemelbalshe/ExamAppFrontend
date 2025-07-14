@@ -13,6 +13,7 @@ import { MainLayout } from './layout/main-layout/main-layout';
 import { ShowResult } from './pages/show-result/show-result';
 import { isAdminGuard } from './guards/is-admin-guard';
 import { Profile } from './pages/profile/profile';
+import { ShowExam } from './pages/admin-dashboard/show-exam/show-exam';
 
 export const routes: Routes = [
   {
@@ -49,10 +50,15 @@ export const routes: Routes = [
     children: [
       {
         path: 'exams',
+        pathMatch: 'full',
         loadComponent: () =>
           import('./pages/admin-dashboard/all-exams/all-exams').then(
             (m) => m.AllExams
           ),
+      },
+      {
+        path: 'exams/:id',
+        component: ShowExam,
       },
       {
         path: 'question/add/:examId',
@@ -60,8 +66,8 @@ export const routes: Routes = [
         data: { isEditMode: false },
       },
       {
-        path: 'question/edit/:examId',
-        component: EditQuestion,
+        path: 'question/edit/:id',
+        component: AddQuestion,
         data: { isEditMode: true },
       },
     ],
