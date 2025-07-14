@@ -1,6 +1,9 @@
 import { Component, Input, Output, EventEmitter, inject, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 
+
+
+
 export interface TableColumn {
   label: string;
   field: string;
@@ -59,11 +62,13 @@ export class Table implements OnChanges {
   @Output() actionClick = new EventEmitter<{ type: string; row: any }>();
   @Output() pageChange = new EventEmitter<number>();
   @Output() sortChange = new EventEmitter<SortEvent>();
+  @Output() nameClick = new EventEmitter<any>();
 
   private clientCurrentPage: number = 1;
   private document = inject(DOCUMENT);
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(" data is",this.data)
     if (changes['data']) {
       console.log('🔍 Table received data:', this.data);
       console.log('🔍 Table data length:', this.data?.length);
@@ -197,4 +202,5 @@ export class Table implements OnChanges {
   }
 
   Math = Math;
+
 }
