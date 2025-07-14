@@ -7,8 +7,10 @@
     <h3>{{ confirm.title }}</h3>
     <p>{{ confirm.message }}</p>
     <div class="confirm-actions">
-      <button class="btn cancel" (click)="confirm.cancel()">Cancel</button>
-      <button class="btn confirm" (click)="confirm.confirm()">Confirm</button>
+      <button *ngIf="!confirm.isPrompt" class="btn cancel" (click)="confirm.cancel()">{{confirm.cancelText}}</button>
+      <button class="btn confirm" [ngClass]=" confirm.isSuccess ? 'confirm-success' : 'confirm-danger'"
+       (click)="confirm.confirm()">{{confirm.oKText}}
+      </button>
     </div>
   </div>
 </div>

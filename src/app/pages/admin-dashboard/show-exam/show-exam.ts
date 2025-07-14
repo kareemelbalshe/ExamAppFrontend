@@ -12,7 +12,7 @@ import { Confirm } from '../../../shared/confirm/confirm';
 
 @Component({
   selector: 'app-show-exam',
-  imports: [CommonModule,Confirm],
+  imports: [CommonModule],
   templateUrl: './show-exam.html',
   styleUrl: './show-exam.css',
   animations: [
@@ -98,7 +98,11 @@ export class ShowExam implements OnInit {
     this.confirmService.show(
       'Delete Question',
       'Are you sure you want to delete this question?',
-      () => this.onDeleteConfirm(questionId)
+      () => this.onDeleteConfirm(questionId),
+      {
+        okText: 'Delete',
+        isSuccess: false,
+      }
     );
     
   }
@@ -106,7 +110,12 @@ export class ShowExam implements OnInit {
     this.questionsService.deleteQuestion(questionId).subscribe({
       next: () => this.loadQuestions(),
       error: (error) => {
-        this.confirmService.show('Error', `Failed to delete question. Please try again.`, () => {});
+        this.confirmService.show('Error', `Failed to delete question. Please try again.`, () => {},{
+                                                      okText: 'Ok',
+                                                      isSuccess: false,
+                                                      isPrompt: true
+                                                    }
+                                );
       }
     });
   }
