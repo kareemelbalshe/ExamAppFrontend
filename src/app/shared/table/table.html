@@ -1,33 +1,56 @@
 <div class="table-wrapper" [class.dark-mode]="isDarkMode">
   <div *ngIf="caption" class="caption">{{ caption }}</div>
 
-  <!-- Wrap for horizontal scroll -->
   <div class="scroll-container">
-    <div class="table-body-wrapper" style="position: relative; min-height: 150px;">
-      
-      <!-- Loader inside table only -->
+    <div
+      class="table-body-wrapper"
+      style="position: relative; min-height: 150px;"
+    >
       <div *ngIf="loading" class="table-loader-overlay">
         <span class="spinner"></span>
       </div>
 
-      <!-- Table Header -->
       <div *ngIf="!loading">
         <div class="table-row header">
-          <div class="table-cell" *ngFor="let col of columns">
-            {{ col.label }}
+          <div
+            class="table-cell"
+            *ngFor="let col of columns"
+            [class.sortable]="col.sortable"
+            [class.sorted]="col.sortDirection"
+            [class.asc]="col.sortDirection === 'asc'"
+            [class.desc]="col.sortDirection === 'desc'"
+            (click)="onSort(col)"
+          >
+            <div class="header-content">
+              <span class="header-text">{{ col.label }}</span>
+              <i
+                *ngIf="col.sortable"
+                [class]="getSortIcon(col)"
+                class="sort-icon"
+              ></i>
+            </div>
           </div>
-          <div class="table-cell actions" *ngIf="actions.length > 0">Actions</div>
+          <div class="table-cell actions" *ngIf="actions.length > 0">
+            Actions
+          </div>
         </div>
 
-        <!-- Table Rows -->
         <div
-          *ngFor="let row of paginatedData; let i = index"
+          *ngFor="let row of displayData; let i = index"
           class="table-row"
           [style.animationDelay.ms]="i * 100"
         >
           <div class="table-cell" *ngFor="let col of columns">
             <ng-container [ngSwitch]="col.pipe">
-              <span *ngSwitchCase="'date'">{{ row[col.field] | date: 'short' }}</span>
+              <span *ngSwitchCase="'date'"
+                >{{ row[col.field] | date: 'short' }}</span
+              >
+              <span
+                *ngSwitchCase="'boolean'"
+                [class]="row[col.field] ? 'status-active' : 'status-inactive'"
+              >
+                {{ row[col.field] ? 'Active' : 'Inactive' }}
+              </span>
               <span *ngSwitchDefault>{{ row[col.field] }}</span>
             </ng-container>
           </div>
@@ -45,31 +68,76 @@
           </div>
         </div>
 
-        <!-- No data -->
-        <div *ngIf="paginatedData.length === 0" class="no-data">
+        <div *ngIf="displayData.length === 0" class="no-data">
           No data available
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Pagination -->
-  <div class="pagination center" *ngIf="totalPages > 1">
-    <button (click)="changePage(-1)" [disabled]="currentPage === 1">
-      <i class="fas fa-chevron-left"></i>
-    </button>
+  <div
+    class="pagination-wrapper"
+    *ngIf="totalPages > 1 || totalItems > paginationInfo.itemsPerPage"
+  >
+    <div class="pagination-info">
+      <span *ngIf="useBackendPagination">
+        Showing {{ (currentPage - 1) * paginationInfo.itemsPerPage + 1 }} - {{
+        Math.min(currentPage * paginationInfo.itemsPerPage, totalItems) }} of {{
+        totalItems }} items
+      </span>
+      <span *ngIf="!useBackendPagination">
+        Showing {{ (currentPage - 1) * paginationInfo.itemsPerPage + 1 }} - {{
+        Math.min(currentPage * paginationInfo.itemsPerPage, data.length) }} of
+        {{ data.length }} items
+      </span>
+    </div>
 
-    <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+    <div class="pagination center">
       <button
-        [class.active]="currentPage === i + 1"
-        (click)="currentPage = i + 1"
+        (click)="goToPage(1)"
+        [disabled]="currentPage === 1"
+        class="pagination-btn"
+        title="First page"
       >
-        {{ i + 1 }}
+        <i class="fas fa-angle-double-left"></i>
       </button>
-    </ng-container>
 
-    <button (click)="changePage(1)" [disabled]="currentPage === totalPages">
-      <i class="fas fa-chevron-right"></i>
-    </button>
+      <button
+        (click)="changePage(-1)"
+        [disabled]="currentPage === 1"
+        class="pagination-btn"
+        title="Previous page"
+      >
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <ng-container *ngFor="let page of getVisiblePages()">
+        <button
+          [class.active]="currentPage === page"
+          (click)="goToPage(page)"
+          class="pagination-btn page-number"
+        >
+          {{ page }}
+        </button>
+      </ng-container>
+
+      <button
+        (click)="changePage(1)"
+        [disabled]="currentPage === totalPages"
+        class="pagination-btn"
+        title="Next page"
+      >
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <button
+        (click)="goToPage(totalPages)"
+        [disabled]="currentPage === totalPages"
+        class="pagination-btn"
+        title="Last page"
+      >
+        <i class="fas fa-angle-double-right"></i>
+      </button>
+    </div>
   </div>
 </div>
