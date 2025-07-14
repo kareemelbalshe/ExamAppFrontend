@@ -1,22 +1,25 @@
+
 import { Choice } from './../../../models/choice';
-import { Question } from './../../../models/question';
 import { ChoiceDto } from './../../../models/dtos/choice/create-choice-dto';
 import { CreateQuestionDto } from './../../../models/dtos/question/create-question-dto';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Button } from "../../../shared/button/button";
 import { QuestionService } from '../../../services/question/question-service';
 import { ChoiceService } from '../../../services/choice/choice-service';
 import { QuestionDto } from '../../../models/dtos/question/choice-dto';
+import { CustomInput } from "../../../shared/custom-input/custom-input";
+import { Confirm } from "../../../shared/Confirm/confirm";
+import { ConfirmService } from '../../../shared/confirm/confirm.service';
 
 @Component({
   selector: 'app-add-question',
   templateUrl: './add-question.html',
   styleUrl: './add-question.css',
-  imports: [CommonModule, FormsModule, Button],
+  imports: [CommonModule, FormsModule, Button, CustomInput, Confirm],
   animations: [
     trigger('fadeSlide', [
       transition(':enter', [
@@ -32,12 +35,12 @@ import { QuestionDto } from '../../../models/dtos/question/choice-dto';
 })
 
 
-
-
 export class AddQuestion {
   @Input() isEditMode = false;
   @Input() questionId?: number | string | null;
   @Input() examId?: number;
+
+  questionTextControl = new FormControl('',[Validators.required]);
 
   // Question text
   questionText = '';
@@ -51,27 +54,20 @@ export class AddQuestion {
   deletedChoiceIds: number[] = [];
   originalQuestionText = '';
 
-  // Mock API service - replace with real service
-  private api = {
-    createQuestion: (q: any) => console.log('POST create', q),
-    updateQuestion: (id: any, text: string) => console.log('PUT question', id, text),
-    updateChoicesRange: (choices: Choice[]) => console.log('PUT choices', choices),
-    deleteChoices: (ids: number[]) => console.log('DELETE choices', ids),
-  };
-
+ 
 
   constructor(
     private questionService: QuestionService,
     private choiceService: ChoiceService,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private router: Router
-
-  ) { }
+    private router: Router,
+    private confirmService: ConfirmService
+  ) {}
 
   ngOnInit() {
-    console.log('AddQuestion component initialized');
-    this.route.data.subscribe(data => {
+    console.log('AddQuestion component being initialized');
+    this.route.data.subscribe((data) => {
       this.isEditMode = data['isEditMode'] === true;
       if (this.isEditMode)
         this.route.paramMap.subscribe(params => {
@@ -83,9 +79,8 @@ export class AddQuestion {
         this.route.paramMap.subscribe(params => {
           this.examId = +params.get('examId')!;
           console.log('Exam ID:', this.examId);
-          // Initialize with empty question text and choices
           this.questionText = '';
-          this.choices = [{ text: '', isCorrect: false }]; // Start with one empty choice
+          this.choices = [{ text: '', isCorrect: false }]; 
         });
       }
       console.log('Edit mode:', this.isEditMode);
@@ -94,40 +89,31 @@ export class AddQuestion {
   }
 
   async loadQuestionForEdit(questionId: number) {
-    // Example: load from backend
-    this.questionService.getQuestion(questionId)
-      .subscribe({
-        next: (response) => {
-          this.questionText = response.data.text;
-          this.originalQuestionText = response.data.text;
-          console.log('Question loaded:', this.questionText);
-          if (response.data.id)
-            this.loadChoicesForEdit(response.data.id);
-          this.cdr.detectChanges(); // Ensure view updates with new data
-        },
-        error: (err) => {
-          console.error('Error loading question:', err);
-          this.router.navigate(['/not-found']); // Redirect to NotFound page if question not found
-
-
-        }
-
-      })
+    this.questionService.getQuestion(questionId).subscribe({
+      next: (response) => {
+        this.questionText = response.data.text;
+        this.originalQuestionText = response.data.text;
+        console.log('Question loaded:', this.questionText);
+        if (response.data.id) this.loadChoicesForEdit(response.data.id);
+        this.cdr.detectChanges(); 
+      },
+      error: (err) => {
+        console.error('Error loading question:', err);
+        this.router.navigate(['/not-found']); 
+      },
+    });
   }
   loadChoicesForEdit(questionId?: number) {
-    // Example: load from backend
-    this.choiceService.getQuestionChoices(Number(questionId))
-      .subscribe({
-        next: (response) => {
-          this.choices = response.data.$values || [];
-          this.originalChoices = [...this.choices];
-          this.cdr.detectChanges(); // Ensure view updates with new data
-        },
-        error: (err) => {
-          console.error('Error loading choices:', err);
-        }
-      });
-
+    this.choiceService.getQuestionChoices(Number(questionId)).subscribe({
+      next: (response) => {
+        this.choices = response.data.$values || [];
+        this.originalChoices = [...this.choices];
+        this.cdr.detectChanges(); 
+      },
+      error: (err) => {
+        console.error('Error loading choices:', err);
+      },
+    });
   }
 
   addChoice() {
@@ -157,147 +143,117 @@ export class AddQuestion {
     }
   }
 
-  async onSubmit() {
-    if (!this.isEditMode) {
-      // CREATE MODE
-
-    } else {
-      // EDIT MODE
-      if (this.questionId) {
-        await this.api.updateQuestion(this.questionId, this.questionText);
-      }
-
-      if (this.updatedChoices.length) {
-        await this.api.updateChoicesRange(this.updatedChoices);
-      }
-
-      if (this.deletedChoiceIds.length) {
-        await this.api.deleteChoices(this.deletedChoiceIds);
-      }
-
-      alert('Changes Saved!');
-    }
-  }
-
-  async onCreate() {
+  onCreate() {
+    console.log(this.questionText,this.questionTextControl)
     if (!this.examId) {
-      alert('Exam ID is required to create a question.');
+      this.confirmService.show('','Exam ID is required to create a question.',()=>{this.router.navigateByUrl('/admin-dashboard/exams');});
       return;
     }
+    let status = this.isValidData();
+    if (!status.isValid) {
+      this.confirmService.show('Invalid inputs',status.message,()=>{});
+      return;
+    }
+
+    
+    this.confirmService.show('Confirm Creation', 'Are you sure you want to create this question?',this.onCreateConfirmed )
+  }
+
+  onCreateConfirmed = () =>{
+    console.log('Creating question with text:', this.questionTextControl);
     let createQuestionDto: CreateQuestionDto = {
-        text: this.questionText,
-        choices: this.choices.map((choice): ChoiceDto => ({
-        text: choice.text,
-        isCorrect: choice.isCorrect ?? false,
-        questionId: this.questionId ? Number(this.questionId) : 0, // Use the questionId if available, otherwise default to 0
-        // Default to false if not specified
-      })),
-      examId: this.examId
+      text: this.questionTextControl.value ?? '',
+      choices: this.choices.map(
+        (choice): ChoiceDto => ({
+          text: choice.text,
+          isCorrect: choice.isCorrect ?? false,
+          questionId: this.questionId ? Number(this.questionId) : 0, 
+        })
+      ),
+      examId: this.examId,
     };
     console.log('Creating question with payload:', createQuestionDto);
 
     this.questionService.createQuestion(createQuestionDto).subscribe({
       next: (response) => {
         console.log('Question created successfully:', response);
-        // this.router.navigate(['/admin-dashboard/questions']);
-        alert('Question Created!');
+        this.confirmService.show('Success','Question updated successfully!',()=>{
+          this.router.navigate(['/admin-dashboard/questions']); 
+        }
+        );
       },
       error: async(err) => {
         console.error('Error creating question:', await err.message);
         alert('Failed to create question. Please try again.');
-      }
+      },
     });
-    alert('Question Created!');
   }
 
-  async onUpdate() {
-    if (!this.questionId) {
-      alert('Question ID is required to update a question.');
+  onUpdate() {
+    console.log(this.questionText,this.questionTextControl)
+    let status = this.isValidData();
+    if (!status.isValid) {
+      this.confirmService.show('Invalid inputs',status.message,()=>{});
       return;
     }
-    if (this.choices.length == 0) {
-      alert('Question text cannot be empty.');
-      return;
-    }
-    if( this.questionText.trim() == '') {
-      alert('Question text cannot be empty.');
-      return;
-    }
+    this.confirmService.show('Confirm Update', 'Are you sure you want to update this question?', () => {
+      this.onUpdateConfirmed();
+    });
+      
+  }
 
-    let questionDto:QuestionDto= {
-        text: this.questionText,
-        id: this.questionId ? Number(this.questionId) : 0, // Use the questionId if available, otherwise default to 0
-        choices: this.choices.map((c):Choice=>
-            ({
-              id: c.id ? Number(c.id) : 0, // Use the choice ID if available, otherwise default to 0
-              isCorrect: c.isCorrect ?? false, // Default to false if not specified
-              questionId: this.questionId ? Number(this.questionId) : 0, // Use the questionId if available, otherwise default to 0
-              text: c.text,
-            })
-        ) // Default to false if not specified
-    }
-
+  onUpdateConfirmed =()=> {
+    let questionDto: QuestionDto = {
+      text: this.questionTextControl.value ?? '',
+      id: this.questionId ? Number(this.questionId) : 0, 
+      choices: this.choices.map(
+        (c): Choice => ({
+          id: c.id ? Number(c.id) : 0, 
+          isCorrect: c.isCorrect ?? false,
+          questionId: this.questionId ? Number(this.questionId) : 0,
+          text: c.text,
+        })
+      ), 
+    };
 
     this.questionService
-          .updateQuestion(Number(this.questionId), questionDto)
-          .subscribe({
-            next: (response) => {
-              console.log('Question updated successfully:', response);
-            },
-            error: (err) => {
-              console.error('Error updating question:', err);
-              alert('Failed to update question. Please try again.');
-            }}
-          );
-    
-    //   if (this.questionId && this.questionText != this.originalQuestionText) {
-    //   await this.questionService.updateQuestion(Number(this.questionId),{id:Number(this.questionId), text: this.questionText} ).subscribe({
-    //     next: (response) => {
-    //       console.log('Question updated successfully:', response);
-    //     },
-    //     error: (err) => {
-    //       console.error('Error updating question:', err);
-    //       alert('Failed to update question. Please try again.');
-    //     }
-    //   });
-    //   console.log('Updating question with ID:', this.questionId);
-    // }
-
-    // if (this.updatedChoices.length) {
-    //   await this.choiceService.updateRange(this.updatedChoices).subscribe(
-    //     response => {
-    //       console.log('Choices updated successfully:', response);
-    //     },
-    //     error => {
-    //       console.error('Error updating choices:', error);
-    //       alert('Failed to update choices. Please try again.');
-    //     }
-    //   );
-    // }
-
-    // if (this.deletedChoiceIds.length > 0) {
-    //   for (let choice of this.deletedChoiceIds)
-    //     await this.choiceService.deleteChoice(choice).subscribe(
-    //       response => {
-    //         console.log('Choice deleted successfully:', response);
-    //       },
-    //       error => {
-    //         console.error('Error deleting choice:', error)
-    //       });
-    //   console.log('Deleted choices with IDs:', this.deletedChoiceIds);
-    // }
-
-    alert('Changes Saved!');
+      .updateQuestion(Number(this.questionId), questionDto)
+      .subscribe({
+        next: (response) => {
+          console.log('Question updated successfully:', response);
+          this.confirmService.show('Success','Question updated successfully!',()=>{
+            this.router.navigate(['/admin-dashboard/questions']);
+          });
+        },
+        error: (err) => {
+          console.error('Error updating question:', err);
+          alert('Failed to update question. Please try again.');
+        },
+      });
   }
-
-
-
   toggleCorrect(choice: Choice) {
     choice.isCorrect = !choice.isCorrect;
     this.markChoiceAsUpdated(choice);
   }
   getChoiceLabel(index: number): string {
-    return String.fromCharCode(65 + index); // A, B, C...
+    return String.fromCharCode(65 + index); 
+  }
+  isValidData(): {isValid:boolean, message:string} {
+    if(!this.questionTextControl.valid) 
+      return {isValid:false, message:'Question text is required.'};
+    if (! (this.choices.length > 1)) 
+      return {isValid:false, message:'At least two choices are required.'};
+    
+    let hasEmptyChoice = !this.choices.every(
+          (choice) => choice.text.trim() !== ''
+        ) 
+    if(hasEmptyChoice)
+        return {isValid:false, message:"Choice can't be empty."};
+    let hasCorrectChoice = this.choices.some((choice) => choice.isCorrect);
+    if (!hasCorrectChoice)  
+      return {isValid:false, message:'At least one choice must be marked as correct.'};
+
+    return {isValid:true, message:'Valid data'};
 
   }
 }
