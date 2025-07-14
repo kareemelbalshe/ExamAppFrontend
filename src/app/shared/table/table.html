@@ -55,13 +55,13 @@
               <span
                 *ngSwitchCase="'deletedStatus'"
                 [class]="row[col.field] ? 'status-inactive' : 'status-active'"
-              >
+              >    
                 {{ row[col.field] ? 'Deleted' : 'Active' }}
               </span>
               <span *ngSwitchDefault>{{ row[col.field] }}</span>
             </ng-container>
           </div>
-
+   
           <div class="table-cell actions" *ngIf="actions.length > 0">
             <button
               *ngFor="let action of actions"
