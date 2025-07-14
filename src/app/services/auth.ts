@@ -23,14 +23,14 @@ export class Auth {
       tap((response: any) => {
         this.role = response.data.role;
         localStorage.setItem('token', response.data.token);
-        this.loggedIn.next(true); // ✅ تحديث الحالة
+        this.loggedIn.next(true);
       })
     );
   }
 
   logout() {
     localStorage.removeItem('token');
-    this.loggedIn.next(false); // ✅ تحديث الحالة
+    this.loggedIn.next(false);
   }
 
   isAuthenticated(): boolean {
