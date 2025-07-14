@@ -43,7 +43,10 @@
     <li class="nav-item mx-1">
       <div class="theme-toggle-container" (click)="toggleTheme()">
         <div class="theme-toggle-circle" [class.move-left]="darkMode">
-          {{ darkMode ? "🌞" : "🌙" }}
+          <i
+            class="bi"
+            [ngClass]="darkMode ? 'bi-sun-fill' : 'bi-moon-fill'"
+          ></i>
         </div>
       </div>
     </li>
@@ -58,10 +61,16 @@
 
     <ng-template #logged>
       <li class="nav-item mx-1">
-        <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        <a class="nav-link" routerLink="/profile">
+          <i class="fa fa-user"></i>
+          Profile</a
+        >
       </li>
       <li class="nav-item mx-1">
-        <a class="nav-link cursor-pointer" (click)="logout()">Logout</a>
+        <a class="nav-link cursor-pointer" (click)="logout()">
+          <i class="fa fa-sign-out-alt"></i>
+          Logout</a
+        >
       </li>
     </ng-template>
   </ul>

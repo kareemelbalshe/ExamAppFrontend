@@ -1,0 +1,20 @@
+<div class="card" [style.borderColor]="color">
+  <div class="card-content">
+    <div class="text">
+      <h3>
+        Title: <span> {{ exam.title }}</span>
+      </h3>
+      <p>{{ exam.description }}</p>
+      <p>Start Date: <span>{{ exam.startTime | date : "short" }}</span></p>
+      <p>End Date: <span>{{ exam.endTime | date : "short" }}</span></p>
+    </div>
+  </div>
+  <div class="card-footer">
+    <app-button
+      [text]="buttonText"
+      icon="fa-solid fa-right-to-bracket"
+      type="button"
+      (clicked)="onClick()"
+    ></app-button>
+  </div>
+</div>

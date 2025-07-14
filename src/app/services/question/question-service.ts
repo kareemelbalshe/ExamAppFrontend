@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../environments/environment.development';
 import { Choice } from '../../models/choice';
 import { ChoiceDto } from '../../models/dtos/choice/create-choice-dto';
 import { CreateQuestionDto } from '../../models/dtos/question/create-question-dto';

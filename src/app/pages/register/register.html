@@ -1,1 +1,38 @@
-<p>register works!</p>
+<form [formGroup]="form" (ngSubmit)="register()">
+  <app-custom-input
+    label="Username"
+    placeholder="Enter your Username"
+    [control]="username"
+    icon="fa-person"
+    type="text"
+  />
+  <app-custom-input
+    label="Email"
+    placeholder="Enter your email"
+    [control]="email"
+    icon="fa-envelope"
+    type="email"
+  />
+
+  <app-custom-input
+    label="Password"
+    placeholder="Enter your password"
+    [control]="password"
+    [showToggle]="true"
+    type="password"
+  />
+  <app-custom-input
+    label="Confirm Password"
+    placeholder="Enter your confirm password"
+    [control]="confirmPassword"
+    [showToggle]="true"
+    type="password"
+  />
+
+  <app-button
+    text="Register"
+    icon="fa-solid fa-right-to-bracket"
+    [loading]="isLoading"
+    type="submit"
+  ></app-button>
+</form>

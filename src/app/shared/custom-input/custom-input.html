@@ -8,7 +8,9 @@
       [placeholder]="placeholder"
       [formControl]="control"
       [class.invalid]="showError()"
-    />
+      />
+      <!-- [(ngModel)]="searchName"
+      (ngModelChange)="onSearchNameChange($event)" -->
 
     <span class="icon" *ngIf="showToggle" (click)="toggleShow()">
       <i class="fa" [ngClass]="show ? 'fa-eye-slash' : 'fa-eye'"></i>

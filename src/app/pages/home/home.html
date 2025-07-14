@@ -1,1 +1,41 @@
-<p>home works!</p>
+<div class="container mt-4">
+  <h2>Exams</h2>
+
+  <app-custom-input
+    placeholder="Search by name"
+    [control]="searchControl"
+    icon="fa-search"
+    type="text"
+  >
+  </app-custom-input>
+
+  <div class="list-exams" *ngIf="activeExams.length > 0; else noExams">
+    <app-card *ngFor="let exam of activeExams" [exam]="exam"></app-card>
+  </div>
+
+  <ng-template #noExams>
+    <p>No exams found.</p>
+  </ng-template>
+
+  <div
+    class="pagination mt-4 d-flex align-items-center justify-content-center gap-2 flex-wrap"
+  >
+    <button [disabled]="page <= 1" (click)="goToPage(page - 1)">‹</button>
+
+    <ng-container *ngFor="let p of getPages()">
+      <button
+        [ngClass]="{
+          'button-active': p === page,
+          'btn-outline-secondary': p !== page
+        }"
+        (click)="goToPage(p)"
+      >
+        {{ p }}
+      </button>
+    </ng-container>
+
+    <button [disabled]="page >= totalPages" (click)="goToPage(page + 1)">
+      ›
+    </button>
+  </div>
+</div>
