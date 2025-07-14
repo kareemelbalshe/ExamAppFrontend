@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfirmService } from './confirm.service';
+import { CustomInput } from "../custom-input/custom-input";
+import { Button } from "../button/button";
 
 @Component({
   selector: 'app-confirm',

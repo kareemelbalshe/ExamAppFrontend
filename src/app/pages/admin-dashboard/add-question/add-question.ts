@@ -12,14 +12,14 @@ import { QuestionService } from '../../../services/question/question-service';
 import { ChoiceService } from '../../../services/choice/choice-service';
 import { QuestionDto } from '../../../models/dtos/question/question-dto';
 import { CustomInput } from "../../../shared/custom-input/custom-input";
-import { Confirm } from "../../../shared/confirm/confirm";
+
 import { ConfirmService } from '../../../shared/confirm/confirm.service';
 
 @Component({
   selector: 'app-add-question',
   templateUrl: './add-question.html',
   styleUrl: './add-question.css',
-  imports: [CommonModule, FormsModule, Button, CustomInput, Confirm],
+  imports: [CommonModule, FormsModule, Button, CustomInput],
   animations: [
     trigger('fadeSlide', [
       transition(':enter', [
@@ -159,12 +159,26 @@ export class AddQuestion implements OnInit {
     console.log(this.questionText,this.questionTextControl)
 
     if (!this.examId) {
-      this.confirmService.show('','Exam ID is required to create a question.',()=>{this.router.navigateByUrl('/admin-dashboard/exams');});
+      this.confirmService.show('',
+                        'Exam ID is required to create a question.',
+                        ()=>{this.router.navigateByUrl('/admin-dashboard/exams')},
+                        {
+                          okText: 'Ok',
+                          isSuccess: false,
+                          isPrompt: true,
+                        }
+    )
       return;
     }
     let status = this.isValidData();
     if (!status.isValid) {
-      this.confirmService.show('Invalid inputs',status.message,()=>{});
+      this.confirmService.show('Invalid inputs',status.message,()=>{},
+                                          {
+                                            okText: 'Ok',
+                                            isSuccess: false,
+                                            isPrompt: true,
+                                          }
+                            );
       return;
     }
 
@@ -194,12 +208,23 @@ export class AddQuestion implements OnInit {
         console.log('Question created successfully:', response);
         this.confirmService.show('Success','Question updated successfully!',()=>{
           this.router.navigate(['/dashboard/exams', this.examId]); 
+        },
+        {
+          okText: 'Ok',
+          isSuccess: true,
+          isPrompt: true,
         }
         );
       },
       error: async (err) => {
         console.error('Error creating question:', await err.message);
-        this.confirmService.show('Error', 'Failed to create question. Please try again.', () => {});
+        this.confirmService.show('Error', 'Failed to create question. Please try again.', () => {},
+                        {
+                          okText: 'Ok',
+                          isSuccess: false,
+                          isPrompt: true,
+                        }
+      );
       },
     });
   }
@@ -208,12 +233,18 @@ export class AddQuestion implements OnInit {
     console.log(this.questionText,this.questionTextControl)
     let status = this.isValidData();
     if (!status.isValid) {
-      this.confirmService.show('Invalid inputs',status.message,()=>{});
+      this.confirmService.show('Invalid inputs',status.message,()=>{},{
+                          okText: 'Ok',
+                          isSuccess: false,
+                          isPrompt: true,
+                        });
       return;
     }
     this.confirmService.show('Confirm Update', 'Are you sure you want to update this question?', () => {
       this.onUpdateConfirmed();
-    });
+    }
+  
+  );
       
   }
 
@@ -239,12 +270,24 @@ export class AddQuestion implements OnInit {
           console.log('Question updated successfully:', response);
           this.confirmService.show('Success','Question updated successfully!',()=>{
             this.router.navigate(['/dashboard/exams', this.examId]);
-          });
+          },
+          {
+            okText: 'Ok',
+            isSuccess: true,
+            isPrompt: true,
+          }
+          
+        );
 
         },
         error: (err) => {
           console.error('Error updating question:', err);
-          this.confirmService.show('Error', 'Failed to update question. Please try again.', () => {});
+          this.confirmService.show('Error', 'Failed to update question. Please try again.', () => {},
+                        {
+                          okText: 'Ok',
+                          isSuccess: false,
+                          isPrompt: true,
+                        });
         },
       });
   }
