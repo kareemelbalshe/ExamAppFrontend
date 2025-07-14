@@ -16,7 +16,7 @@
     />
 
     <app-button
-      text=" Add Exam"
+      text="Add Exam"
       icon="fa-solid fa-plus"
       [loading]="loading"
       type="button"
@@ -32,8 +32,12 @@
     [loading]="loading"
     [striped]="true"
     [hoverable]="true"
-    caption="Exams"
-    [itemsPerPage]="5"
+    [caption]="'Exams'"
+    [paginationInfo]="paginationInfo"
+    [useBackendPagination]="true"
+    [currentSort]="currentSort"
     (actionClick)="onActionClick($event)"
+    (pageChange)="onPageChange($event)"
+    (sortChange)="onSortChange($event)"
   ></app-table>
 </div>
