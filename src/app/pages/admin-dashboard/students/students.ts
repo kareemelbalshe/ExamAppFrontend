@@ -1,34 +1,33 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Table } from '../../../shared/table/table';
-import { Exam } from '../../../models/exam';
-import { ExamService } from '../../../services/exam.service';
+
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../../../shared/dialog/dialog';
 import { CustomInput } from '../../../shared/custom-input/custom-input';
 import { Button } from '../../../shared/button/button';
 import { ConfirmService } from '../../../shared/confirm/confirm.service';
-import { CreateExam } from '../../../models/dtos/Exam/CreateExam';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
-import { Router } from '@angular/router';
+import { CreateStudent, Student } from '../../../models/user';
+import { StudentService } from '../../../services/student/student';
 
 @Component({
-  selector: 'app-all-exams',
+  selector: 'app-all-students',
   standalone: true,
   imports: [CommonModule, Table, CustomInput, Button, ReactiveFormsModule],
-  templateUrl: './all-exams.html',
-  styleUrl: './all-exams.css',
+  templateUrl: './students.html',
+  styleUrls: ['./students.css'],
 })
-export class AllExams implements OnInit {
+export class AllStudents implements OnInit {
   columns = [
     { label: 'ID', field: 'id', sortable: true },
-    { label: 'Exam Title', field: 'title', sortable: true },
-    { label: 'Description', field: 'description' },
-    { label: 'Start Time', field: 'startTime', pipe: 'date', sortable: true },
-    { label: 'End Time', field: 'endTime', pipe: 'date', sortable: true },
-    { label: 'Status', field: 'isActive', pipe: 'boolean', sortable: true },
+    { label: 'Username', field: 'username', sortable: true },
+    { label: 'Email', field: 'email', sortable: true },
+    { label: 'Role', field: 'role' },
+    // { label: 'Deleted', field: 'isDeleted', pipe: 'boolean', sortable: true },
+    { label: 'Deleted', field: 'isDeleted', pipe: 'deletedStatus', sortable: true },
   ];
 
   actions = [
@@ -37,9 +36,9 @@ export class AllExams implements OnInit {
     { icon: 'fas fa-eye', tooltip: 'View', type: 'view', color: '#28a745' },
   ];
 
-  exams: Exam[] = [];
+  students: Student[] = [];
   loading = false;
-  searchTerm = new FormControl(''); 
+  searchTerm = new FormControl('');
   paginationInfo = {
     currentPage: 1,
     totalPages: 1,
@@ -49,35 +48,33 @@ export class AllExams implements OnInit {
   currentSort: { field: string; direction: 'asc' | 'desc' } | null = null;
 
   constructor(
-    private examService: ExamService,
+    private studentService: StudentService,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
     public confirm: ConfirmService,
-    private toast: ToastService,
-    private router: Router
+    private toast: ToastService
   ) { }
 
   ngOnInit(): void {
-    this.fetchExams();
+    this.fetchStudents();
 
     this.searchTerm.valueChanges.pipe(debounceTime(400)).subscribe(() => {
       this.paginationInfo.currentPage = 1;
-      this.fetchExams();
+      this.fetchStudents();
     });
   }
 
-  fetchExams(): void {
+  fetchStudents(): void {
     this.loading = true;
     const name = this.searchTerm.value || '';
     const sortBy = this.currentSort?.field || 'id';
     const isDesc = this.currentSort?.direction === 'desc';
 
-    this.examService
-      .getAllExams(name, sortBy, isDesc, this.paginationInfo.currentPage, this.paginationInfo.itemsPerPage)
+    this.studentService
+      .getAllStudents(name, sortBy, isDesc, this.paginationInfo.currentPage, this.paginationInfo.itemsPerPage)
       .subscribe({
         next: (res) => {
-
-          this.exams = res.items;
+          this.students = res.items;
           this.paginationInfo.totalItems = res.totalItems;
           this.paginationInfo.totalPages = res.totalPages;
           this.paginationInfo.currentPage = res.currentPage;
@@ -86,28 +83,28 @@ export class AllExams implements OnInit {
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('❌ Error fetching exams:', err);
-          this.exams = [];
+          console.error('❌ Error fetching students:', err);
+          this.students = [];
           this.loading = false;
           this.cdr.detectChanges();
         },
       });
   }
 
-  openDialog(action: string = 'add', exam?: Exam): void {
+  openDialog(action: string = 'add', student?: Student): void {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: {
-        title: action === 'edit' ? 'Edit Exam' : 'Add Exam',
+        title: action === 'edit' ? 'Edit Student' : 'Add Student',
         action,
-        exam,
-        formType: 'exam',
+        student,
+        formType: 'student',
       },
       width: '500px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        action === 'edit' ? this.updateExam(result) : this.addExam(result);
+        action === 'edit' ? this.updateStudent(result) : this.addStudent(result);
       }
     });
   }
@@ -115,87 +112,80 @@ export class AllExams implements OnInit {
   onActionClick(event: { type: string; row: any }) {
     switch (event.type) {
       case 'edit':
-        this.editExam(event.row);
+        this.editStudent(event.row);
         break;
       case 'delete':
-        this.deleteExam(event.row);
+        this.deleteStudent(event.row);
         break;
       case 'view':
-        this.viewExam(event.row);
+        this.viewStudent(event.row);
         break;
     }
   }
 
   onPageChange(page: number): void {
     this.paginationInfo.currentPage = page;
-    this.fetchExams();
+    this.fetchStudents();
   }
 
   onSortChange(event: { field: string; direction: 'asc' | 'desc' }): void {
     this.currentSort = event;
-    this.fetchExams();
+    this.fetchStudents();
   }
 
-  private addExam(exam: Exam) {
-    const payload: CreateExam = {
-      title: exam.title,
-      description: exam.description,
-      startTime: exam.startTime,
-      endTime: exam.endTime,
-      createdBy: 1,
+  private addStudent(student: Student) {
+    const payload: CreateStudent = {
+      username: student.username,
+      email: student.email,
+      password: student.password || '123456',
     };
 
-    this.examService.addExam(payload).subscribe({
+    this.studentService.addStudent(payload).subscribe({
       next: () => {
-        this.toast.show('Exam added successfully', 'success');
-        this.fetchExams();
+        this.toast.show('Student added successfully', 'success');
+        this.fetchStudents();
       },
-      error: () => this.toast.show('Failed to add exam', 'error'),
+      error: () => this.toast.show('Failed to add student', 'error'),
     });
   }
 
-  private editExam(exam: Exam) {
-    this.openDialog('edit', exam);
+  private editStudent(student: Student) {
+    this.openDialog('edit', student);
   }
 
-  private updateExam(exam: Exam) {
-    const payload: CreateExam = {
-      title: exam.title,
-      description: exam.description,
-      startTime: exam.startTime,
-      endTime: exam.endTime,
-      createdBy: 1,
+  private updateStudent(student: Student) {
+    const payload: CreateStudent = {
+      username: student.username,
+      email: student.email,
+      password: student.password || '',
     };
 
-    this.examService.updateExam(exam.id!, payload).subscribe({
+    this.studentService.updateStudent(student.id!, payload).subscribe({
       next: () => {
-        this.toast.show('Exam updated successfully', 'success');
-        this.fetchExams();
+        this.toast.show('Student updated successfully', 'success');
+        this.fetchStudents();
       },
-      error: () => this.toast.show('Failed to update exam', 'error'),
+      error: () => this.toast.show('Failed to update student', 'error'),
     });
   }
 
-  private deleteExam(exam: Exam) {
+  private deleteStudent(student: Student) {
     this.confirm.show(
       'Delete Confirmation',
-      `Are you sure you want to delete the exam "${exam.title}"?`,
+      `Are you sure you want to delete the student "${student.username}"?`,
       () => {
-        this.examService.deleteExam(exam.id).subscribe({
+        this.studentService.deleteStudent(student.id).subscribe({
           next: () => {
-            this.toast.show('Exam deleted successfully', 'success');
-            this.fetchExams();
+            this.toast.show('Student deleted successfully', 'success');
+            this.fetchStudents();
           },
-          error: () => this.toast.show('Failed to delete exam', 'error'),
+          error: (e) => this.toast.show(e.error.message || 'Failed to delete student', 'error'),
         });
       }
     );
   }
 
-  private viewExam(exam: Exam) {
-    if (exam?.id) 
-      this.router.navigateByUrl(`/dashboard/exams/${exam.id}`);
+  private viewStudent(student: Student) {
+    console.log('View student:', student);
   }
-
-  
 }

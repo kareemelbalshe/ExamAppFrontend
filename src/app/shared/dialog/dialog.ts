@@ -9,8 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Exam } from '../../models/exam';
-
-import { MatDatepickerInput } from '@angular/material/datepicker';
+import { Student } from '../../models/user';
 import { Button } from "../button/button";
 
 @Component({
@@ -32,11 +31,19 @@ import { Button } from "../button/button";
 })
 export class DialogComponent implements OnInit {
   examForm: FormGroup;
+  studentForm: FormGroup;
   loading = false;
 
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; action: string; exam?: Exam },
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      title: string;
+      action: string;
+      formType: 'exam' | 'student';
+      exam?: Exam;
+      student?: Student;
+    },
     private fb: FormBuilder
   ) {
     this.examForm = this.fb.group({
@@ -48,16 +55,25 @@ export class DialogComponent implements OnInit {
       endTime: ['', Validators.required],
       isActive: [false],
     });
+
+    this.studentForm = this.fb.group({
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: [''],
+    });
   }
 
   ngOnInit(): void {
-    if (this.data?.action === 'edit' && this.data.exam) {
-      this.populateForm(this.data.exam);
+    if (this.data.formType === 'exam' && this.data.action === 'edit' && this.data.exam) {
+      this.populateExamForm(this.data.exam);
     }
 
+    if (this.data.formType === 'student' && this.data.action === 'edit' && this.data.student) {
+      this.populateStudentForm(this.data.student);
+    }
   }
 
-  populateForm(exam: Exam): void {
+  populateExamForm(exam: Exam): void {
     const startDateTime = new Date(exam.startTime);
     const endDateTime = new Date(exam.endTime);
 
@@ -68,7 +84,14 @@ export class DialogComponent implements OnInit {
       startTime: this.formatTime(startDateTime),
       endDate: endDateTime,
       endTime: this.formatTime(endDateTime),
-      isActive: exam.isActive
+      isActive: exam.isActive,
+    });
+  }
+
+  populateStudentForm(student: Student): void {
+    this.studentForm.patchValue({
+      username: student.username,
+      email: student.email,
     });
   }
 
@@ -79,16 +102,18 @@ export class DialogComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.examForm.valid) {
-      this.loading = true;
-      const formValue = this.examForm.value;
+    this.loading = true;
 
+    if (this.data.formType === 'exam') {
+      if (this.examForm.invalid) return;
+
+      const formValue = this.examForm.value;
       const startDateTime = this.combineDateTime(formValue.startDate, formValue.startTime);
       const endDateTime = this.combineDateTime(formValue.endDate, formValue.endTime);
 
       if (endDateTime <= startDateTime) {
         console.error('End time must be after start time');
-         this.loading = false;
+        this.loading = false;
         return;
       }
 
@@ -101,8 +126,20 @@ export class DialogComponent implements OnInit {
 
       this.dialogRef.close(examData);
     }
-  }
 
+    if (this.data.formType === 'student') {
+      if (this.studentForm.invalid) return;
+
+      const studentData: Student = {
+        ...this.data.student,
+        ...this.studentForm.value,
+      };
+
+      this.dialogRef.close(studentData);
+    }
+
+    this.loading = false;
+  }
 
   combineDateTime(date: Date, time: string): Date {
     const [hours, minutes] = time.split(':').map(Number);
