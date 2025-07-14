@@ -131,7 +131,16 @@ export class AddQuestion implements OnInit {
         ? false
         : true;
     if (isEmptyCell && this.choices.length > 0) {
-      alert('Please fill the last choice before adding a new one.');
+      this.confirmService.show(
+        'Empty Choice',
+        'Please fill the last choice before adding a new one.',
+        () => {},
+        {
+          okText: 'Ok',
+          isSuccess: false,
+          isPrompt: true,
+        }
+      );
       return;
     }
     this.choices.push({ text: '', isCorrect: false });

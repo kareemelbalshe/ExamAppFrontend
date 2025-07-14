@@ -1,10 +1,7 @@
 <div class="container my-4">
   <!-- Page header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold text-primary">Questions for: Arabic (ID: {{ examId }})</h3>
-    <button class="btn btn-success" (click)="onAdd()">
-      <i class="bi bi-plus-lg"></i> Add New Question
-    </button>
+    <h3 class="fw-bold text-primary">{{exam?.title ??''}}</h3>
   </div>
 
   <!-- Loading -->
@@ -51,4 +48,9 @@
       </div>
     </div>
   </div>
+  <!-- Floating Add Button -->
+<button class="fab-btn" (click)="onAdd()">
+  <i class="bi bi-plus-lg"></i>
+</button>
+
 </div>
