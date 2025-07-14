@@ -2,7 +2,7 @@
 import { Choice } from './../../../models/choice';
 import { ChoiceDto } from './../../../models/dtos/choice/create-choice-dto';
 import { CreateQuestionDto } from './../../../models/dtos/question/create-question-dto';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormControl, Validators } from '@angular/forms';
@@ -10,9 +10,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Button } from '../../../shared/button/button';
 import { QuestionService } from '../../../services/question/question-service';
 import { ChoiceService } from '../../../services/choice/choice-service';
-import { QuestionDto } from '../../../models/dtos/question/choice-dto';
+import { QuestionDto } from '../../../models/dtos/question/question-dto';
 import { CustomInput } from "../../../shared/custom-input/custom-input";
-import { Confirm } from "../../../shared/Confirm/confirm";
+import { Confirm } from "../../../shared/confirm/confirm";
 import { ConfirmService } from '../../../shared/confirm/confirm.service';
 
 @Component({
@@ -39,7 +39,7 @@ import { ConfirmService } from '../../../shared/confirm/confirm.service';
   ],
 })
 
-export class AddQuestion {
+export class AddQuestion implements OnInit {
   @Input() isEditMode = false;
   @Input() questionId?: number | string | null;
   @Input() examId?: number;
@@ -99,6 +99,8 @@ export class AddQuestion {
       next: (response) => {
         this.questionText = response.data.text;
         this.originalQuestionText = response.data.text;
+        this.examId = response.data.examId;
+        this.questionTextControl.setValue(this.questionText);
         console.log('Question loaded:', this.questionText);
         if (response.data.id) this.loadChoicesForEdit(response.data.id);
 
@@ -191,13 +193,13 @@ export class AddQuestion {
       next: (response) => {
         console.log('Question created successfully:', response);
         this.confirmService.show('Success','Question updated successfully!',()=>{
-          this.router.navigate(['/admin-dashboard/questions']); 
+          this.router.navigate(['/dashboard/exams', this.examId]); 
         }
         );
       },
       error: async (err) => {
         console.error('Error creating question:', await err.message);
-        alert('Failed to create question. Please try again.');
+        this.confirmService.show('Error', 'Failed to create question. Please try again.', () => {});
       },
     });
   }
@@ -236,13 +238,13 @@ export class AddQuestion {
         next: (response) => {
           console.log('Question updated successfully:', response);
           this.confirmService.show('Success','Question updated successfully!',()=>{
-            this.router.navigate(['/admin-dashboard/questions']);
+            this.router.navigate(['/dashboard/exams', this.examId]);
           });
 
         },
         error: (err) => {
           console.error('Error updating question:', err);
-          alert('Failed to update question. Please try again.');
+          this.confirmService.show('Error', 'Failed to update question. Please try again.', () => {});
         },
       });
   }

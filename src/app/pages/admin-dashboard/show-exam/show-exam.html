@@ -1,1 +1,54 @@
-<p>show-exam works!</p>
+<div class="container my-4">
+  <!-- Page header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-primary">Questions for: Arabic (ID: {{ examId }})</h3>
+    <button class="btn btn-success" (click)="onAdd()">
+      <i class="bi bi-plus-lg"></i> Add New Question
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <!-- Empty -->
+  <div *ngIf="!isLoading && questions.length === 0" class="alert alert-info">
+    No questions found.
+  </div>
+
+  <!-- Question list -->
+  <div *ngIf="!isLoading">
+    <div *ngFor="let q of questions" class="question-card mb-3 rounded shadow-sm">
+      
+      <!-- Header: text, options count, icons -->
+      <div class="question-header d-flex justify-content-between align-items-center p-3">
+        <div class="question-text fw-semibold">{{ q.text }}</div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-light text-secondary border">{{ q.choices.length }} Options</span>
+          <button class="btn btn-icon" (click)="onEdit(q)" title="Edit">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+          <button class="btn btn-icon" (click)="onDelete(q.id ?? 0)" title="Delete">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+          <button class="btn btn-icon toggle-btn" (click)="toggleExpand(q.id ?? 0)">
+            <i [ngClass]="isExpanded(q.id ?? 0) ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Choices animated section -->
+      <div
+        *ngIf="isExpanded(q.id ?? 0)"
+        class="choices-container px-3 pb-3"
+        [@slideToggle]>
+        <div *ngFor="let choice of q.choices"
+             class="choice-item mb-2 rounded p-2"
+             [ngClass]="{'choice-correct': choice.isCorrect}">
+          {{ choice.text }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
