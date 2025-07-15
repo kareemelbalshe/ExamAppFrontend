@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ data.title || 'Dialog' }}</h2>
+<h2 mat-dialog-title>{{ data.title || "Dialog" }}</h2>
 
 <div mat-dialog-content class="dialog-content">
   <form
@@ -10,6 +10,7 @@
       <mat-label>Exam Title</mat-label>
       <input matInput formControlName="title" required />
       <mat-error
+
         *ngIf="examForm.get('title')?.hasError('required') && examForm.get('title')?.touched"
       >
         Title is required
@@ -25,6 +26,7 @@
       <mat-form-field appearance="outline" class="form-field date-field">
         <mat-label>Start Date</mat-label>
         <input
+          title="time"
           matInput
           [matDatepicker]="startDatePicker"
           formControlName="startDate"
@@ -37,6 +39,7 @@
         ></mat-datepicker-toggle>
         <mat-datepicker #startDatePicker></mat-datepicker>
         <mat-error
+
           *ngIf="examForm.get('startDate')?.hasError('required') && examForm.get('startDate')?.touched"
         >
           Start date is required
@@ -59,6 +62,7 @@
       <mat-form-field appearance="outline" class="form-field date-field">
         <mat-label>End Date</mat-label>
         <input
+          title="time"
           matInput
           [matDatepicker]="endDatePicker"
           formControlName="endDate"
@@ -140,7 +144,7 @@
         type="submit"
         [disabled]="studentForm.invalid || loading"
       >
-        {{ data.action === 'edit' ? 'Update' : 'Add' }}
+        {{ data.action === "edit" ? "Update" : "Add" }}
       </button>
       <button mat-button type="button" (click)="close()">Cancel</button>
     </div>

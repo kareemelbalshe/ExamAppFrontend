@@ -1,4 +1,4 @@
-import { ResultSerivce } from './../../services/result/result.service';
+import { ResultService } from './../../services/result/result.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './show-result.css'
 })
 export class ShowResult implements OnInit {
-  constructor(private resultService:ResultSerivce) {}
+  constructor(private resultService:ResultService) {}
 
   ngOnInit() {
     const studentId = 1; // Example student ID, replace with actual logic to get the ID

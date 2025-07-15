@@ -1,7 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,6 +15,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Exam } from '../../models/exam';
 import { Student } from '../../models/user';
+
 import { Button } from "../button/button";
 import { DatePipe } from '@angular/common';
 
@@ -25,7 +31,7 @@ import { DatePipe } from '@angular/common';
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    Button
+    Button,
   ],
   templateUrl: './dialog.html',
   styleUrls: ['./dialog.css'],
@@ -66,11 +72,19 @@ export class DialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.data.formType === 'exam' && this.data.action === 'edit' && this.data.exam) {
+    if (
+      this.data.formType === 'exam' &&
+      this.data.action === 'edit' &&
+      this.data.exam
+    ) {
       this.populateExamForm(this.data.exam);
     }
 
-    if (this.data.formType === 'student' && this.data.action === 'edit' && this.data.student) {
+    if (
+      this.data.formType === 'student' &&
+      this.data.action === 'edit' &&
+      this.data.student
+    ) {
       this.populateStudentForm(this.data.student);
     }
 
@@ -139,11 +153,18 @@ export class DialogComponent implements OnInit {
       this.loading = true;
 
       const formValue = this.examForm.value;
-      const startDateTime = this.combineDateTime(formValue.startDate, formValue.startTime);
-      const endDateTime = this.combineDateTime(formValue.endDate, formValue.endTime);
+      const startDateTime = this.combineDateTime(
+        formValue.startDate,
+        formValue.startTime
+      );
+      const endDateTime = this.combineDateTime(
+        formValue.endDate,
+        formValue.endTime
+      );
 
       if (endDateTime <= startDateTime) {
-        this.dateTimeError = 'End date and time must be after start date and time';
+        this.dateTimeError =
+          'End date and time must be after start date and time';
         this.loading = false;
         return;
       }
