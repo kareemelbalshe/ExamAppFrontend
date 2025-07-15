@@ -21,7 +21,6 @@ export class Header implements OnInit {
   }
 
   ngOnInit() {
-    // ✅ استمع لتغيرات الدخول/الخروج
     this.authService.isLoggedIn$.subscribe((status) => {
       this.isLoggedIn = status;
     });

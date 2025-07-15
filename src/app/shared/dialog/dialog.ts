@@ -33,6 +33,7 @@ export class DialogComponent implements OnInit {
   examForm: FormGroup;
   studentForm: FormGroup;
   loading = false;
+  dateTimeError: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
@@ -71,6 +72,11 @@ export class DialogComponent implements OnInit {
     if (this.data.formType === 'student' && this.data.action === 'edit' && this.data.student) {
       this.populateStudentForm(this.data.student);
     }
+
+    if (this.data.formType === 'student' && this.data.action === 'add') {
+      this.studentForm.get('password')?.setValidators([Validators.required]);
+      this.studentForm.get('password')?.updateValueAndValidity();
+    }
   }
 
   populateExamForm(exam: Exam): void {
@@ -102,17 +108,30 @@ export class DialogComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.loading = true;
+    this.dateTimeError = ''; 
 
     if (this.data.formType === 'exam') {
-      if (this.examForm.invalid) return;
+      this.examForm.markAllAsTouched();
+      
+      if (this.examForm.invalid) {
+        return;
+      }
+
+      this.loading = true;
 
       const formValue = this.examForm.value;
       const startDateTime = this.combineDateTime(formValue.startDate, formValue.startTime);
       const endDateTime = this.combineDateTime(formValue.endDate, formValue.endTime);
 
       if (endDateTime <= startDateTime) {
-        console.error('End time must be after start time');
+        this.dateTimeError = 'End date and time must be after start date and time';
+        this.loading = false;
+        return;
+      }
+
+      const now = new Date();
+      if (startDateTime < now) {
+        this.dateTimeError = 'Start date and time cannot be in the past';
         this.loading = false;
         return;
       }
@@ -128,7 +147,13 @@ export class DialogComponent implements OnInit {
     }
 
     if (this.data.formType === 'student') {
-      if (this.studentForm.invalid) return;
+      this.studentForm.markAllAsTouched();
+      
+      if (this.studentForm.invalid) {
+        return;
+      }
+
+      this.loading = true;
 
       const studentData: Student = {
         ...this.data.student,
