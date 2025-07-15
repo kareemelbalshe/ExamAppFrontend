@@ -39,7 +39,7 @@ export class AllExams implements OnInit {
 
   exams: Exam[] = [];
   loading = false;
-  searchTerm = new FormControl(''); 
+  searchTerm = new FormControl('');
   paginationInfo = {
     currentPage: 1,
     totalPages: 1,
@@ -188,14 +188,18 @@ export class AllExams implements OnInit {
           },
           error: () => this.toast.show('Failed to delete exam', 'error'),
         });
+      },
+      {
+        isSuccess: false,
+        okText: 'Delete',
       }
     );
   }
 
   private viewExam(exam: Exam) {
-    if (exam?.id) 
+    if (exam?.id)
       this.router.navigateByUrl(`/dashboard/exams/${exam.id}`);
   }
 
-  
+
 }
