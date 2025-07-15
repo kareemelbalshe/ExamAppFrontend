@@ -1,9 +1,10 @@
+
 import { StudentService } from './../../services/student/student';
 import { ResultSerivce } from './../../services/result/result.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Result } from '../../models/result';
+import { ResultWithDetails } from '../../models/result';
 import { Student } from '../../models/user';
 import {
   trigger,
@@ -13,6 +14,9 @@ import {
   query,
   stagger
 } from '@angular/animations';
+
+import { ResultService } from './../../services/result/result.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-show-result',
@@ -35,7 +39,7 @@ import {
 })
 export class ShowResult implements OnInit {
 
-  results: Result[] = [];
+  results: ResultWithDetails[] = [];
   student?: Student;
   studentId?: number;
   isLoading: boolean = true;
@@ -47,6 +51,7 @@ export class ShowResult implements OnInit {
     private activeRoute: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) { }
+
 
   ngOnInit() {
     this.activeRoute.params.subscribe(params => {

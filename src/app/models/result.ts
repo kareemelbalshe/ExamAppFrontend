@@ -1,4 +1,5 @@
-export interface Result {
+
+export interface ResultWithDetails{
   id: number;
   attemptNumber: number;
   examId: number;
@@ -14,4 +15,16 @@ export interface Result {
     startTime: string;
     endTime: string;
   };
+}
+
+export interface Result {
+  id?: number;
+  studentId: number;
+  examId: number;
+  attemptNumber: number;
+  score?: number;
+  status: string;
+  startTime?: Date;
+  endTime?: Date;
+  takenAt?: Date;
 }

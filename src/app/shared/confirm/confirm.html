@@ -5,11 +5,21 @@
 >
   <div class="confirm-box animate">
     <h3>{{ confirm.title }}</h3>
-    <p>{{ confirm.message }}</p>
+    <p style="min-width: max-content">{{ confirm.message }}</p>
     <div class="confirm-actions">
-      <button *ngIf="!confirm.isPrompt" class="btn cancel" (click)="confirm.cancel()">{{confirm.cancelText}}</button>
-      <button class="btn confirm" [ngClass]=" confirm.isSuccess ? 'confirm-success' : 'confirm-danger'"
-       (click)="confirm.confirm()">{{confirm.oKText}}
+      <button
+        *ngIf="!confirm.isPrompt"
+        class="btn cancel"
+        (click)="confirm.cancel()"
+      >
+        {{ confirm.cancelText }}
+      </button>
+      <button
+        class="btn confirm"
+        [ngClass]="confirm.isSuccess ? 'confirm-success' : 'confirm-danger'"
+        (click)="confirm.confirm()"
+      >
+        {{ confirm.oKText }}
       </button>
     </div>
   </div>

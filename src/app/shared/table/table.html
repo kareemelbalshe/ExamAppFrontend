@@ -51,6 +51,24 @@
               >
                 {{ row[col.field] ? 'Active' : 'Inactive' }}
               </span>
+
+              <span
+                *ngSwitchCase="'deletedStatus'"
+                [class]="row[col.field] ? 'status-inactive' : 'status-active'"
+              >
+                {{ row[col.field] ? 'Deleted' : 'Active' }}
+              </span>
+              <span
+                *ngSwitchCase="'confidence'"
+                [ngClass]="{
+                  'badge-easy': row[col.field] === 'Easy',
+                  'badge-medium': row[col.field] === 'Medium',
+                  'badge-hard': row[col.field] === 'Hard',
+                  'badge-very-hard': row[col.field] === 'Very Hard'
+                }"
+              >
+                {{ row[col.field] }}
+              </span>
               <span *ngSwitchDefault>{{ row[col.field] }}</span>
             </ng-container>
           </div>

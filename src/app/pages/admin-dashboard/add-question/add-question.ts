@@ -1,4 +1,3 @@
-
 import { Choice } from './../../../models/choice';
 import { ChoiceDto } from './../../../models/dtos/choice/create-choice-dto';
 import { CreateQuestionDto } from './../../../models/dtos/question/create-question-dto';
@@ -11,9 +10,9 @@ import { Button } from '../../../shared/button/button';
 import { QuestionService } from '../../../services/question/question-service';
 import { ChoiceService } from '../../../services/choice/choice-service';
 import { QuestionDto } from '../../../models/dtos/question/question-dto';
-import { CustomInput } from "../../../shared/custom-input/custom-input";
+import { CustomInput } from '../../../shared/custom-input/custom-input';
 
-import { ConfirmService } from '../../../shared/confirm/confirm.service';
+import { ConfirmService } from '../../../services/confirm.service';
 
 @Component({
   selector: 'app-add-question',
@@ -38,13 +37,12 @@ import { ConfirmService } from '../../../shared/confirm/confirm.service';
     ]),
   ],
 })
-
 export class AddQuestion implements OnInit {
   @Input() isEditMode = false;
   @Input() questionId?: number | string | null;
   @Input() examId?: number;
 
-  questionTextControl = new FormControl('',[Validators.required]);
+  questionTextControl = new FormControl('', [Validators.required]);
 
   // Question text
   questionText = '';
@@ -57,8 +55,6 @@ export class AddQuestion implements OnInit {
   updatedChoices: Choice[] = [];
   deletedChoiceIds: number[] = [];
   originalQuestionText = '';
-
-
 
   constructor(
     private questionService: QuestionService,
@@ -86,7 +82,7 @@ export class AddQuestion implements OnInit {
           this.examId = +params.get('examId')!;
           console.log('Exam ID:', this.examId);
           this.questionText = '';
-          this.choices = [{ text: '', isCorrect: false }]; 
+          this.choices = [{ text: '', isCorrect: false }];
         });
       }
       console.log('Edit mode:', this.isEditMode);
@@ -94,7 +90,6 @@ export class AddQuestion implements OnInit {
   }
 
   async loadQuestionForEdit(questionId: number) {
-
     this.questionService.getQuestion(questionId).subscribe({
       next: (response) => {
         this.questionText = response.data.text;
@@ -104,11 +99,11 @@ export class AddQuestion implements OnInit {
         console.log('Question loaded:', this.questionText);
         if (response.data.id) this.loadChoicesForEdit(response.data.id);
 
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading question:', err);
-        this.router.navigate(['/not-found']); 
+        this.router.navigate(['/not-found']);
       },
     });
   }
@@ -117,7 +112,7 @@ export class AddQuestion implements OnInit {
       next: (response) => {
         this.choices = response.data.$values || [];
         this.originalChoices = [...this.choices];
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading choices:', err);
@@ -165,37 +160,41 @@ export class AddQuestion implements OnInit {
   }
 
   onCreate() {
-    console.log(this.questionText,this.questionTextControl)
+    console.log(this.questionText, this.questionTextControl);
 
     if (!this.examId) {
-      this.confirmService.show('',
-                        'Exam ID is required to create a question.',
-                        ()=>{this.router.navigateByUrl('/admin-dashboard/exams')},
-                        {
-                          okText: 'Ok',
-                          isSuccess: false,
-                          isPrompt: true,
-                        }
-    )
+      this.confirmService.show(
+        '',
+        'Exam ID is required to create a question.',
+        () => {
+          this.router.navigateByUrl('/admin-dashboard/exams');
+        },
+        {
+          okText: 'Ok',
+          isSuccess: false,
+          isPrompt: true,
+        }
+      );
       return;
     }
     let status = this.isValidData();
     if (!status.isValid) {
-      this.confirmService.show('Invalid inputs',status.message,()=>{},
-                                          {
-                                            okText: 'Ok',
-                                            isSuccess: false,
-                                            isPrompt: true,
-                                          }
-                            );
+      this.confirmService.show('Invalid inputs', status.message, () => {}, {
+        okText: 'Ok',
+        isSuccess: false,
+        isPrompt: true,
+      });
       return;
     }
 
-    
-    this.confirmService.show('Confirm Creation', 'Are you sure you want to create this question?',this.onCreateConfirmed )
+    this.confirmService.show(
+      'Confirm Creation',
+      'Are you sure you want to create this question?',
+      this.onCreateConfirmed
+    );
   }
 
-  onCreateConfirmed = () =>{
+  onCreateConfirmed = () => {
     console.log('Creating question with text:', this.questionTextControl);
     let createQuestionDto: CreateQuestionDto = {
       text: this.questionTextControl.value ?? '',
@@ -204,8 +203,7 @@ export class AddQuestion implements OnInit {
         (choice): ChoiceDto => ({
           text: choice.text,
           isCorrect: choice.isCorrect ?? false,
-          questionId: this.questionId ? Number(this.questionId) : 0, 
-
+          questionId: this.questionId ? Number(this.questionId) : 0,
         })
       ),
       examId: this.examId,
@@ -215,69 +213,10 @@ export class AddQuestion implements OnInit {
     this.questionService.createQuestion(createQuestionDto).subscribe({
       next: (response) => {
         console.log('Question created successfully:', response);
-        this.confirmService.show('Success','Question updated successfully!',()=>{
-          this.router.navigate(['/dashboard/exams', this.examId]); 
-        },
-        {
-          okText: 'Ok',
-          isSuccess: true,
-          isPrompt: true,
-        }
-        );
-      },
-      error: async (err) => {
-        console.error('Error creating question:', await err.message);
-        this.confirmService.show('Error', 'Failed to create question. Please try again.', () => {},
-                        {
-                          okText: 'Ok',
-                          isSuccess: false,
-                          isPrompt: true,
-                        }
-      );
-      },
-    });
-  }
-
-  onUpdate() {
-    console.log(this.questionText,this.questionTextControl)
-    let status = this.isValidData();
-    if (!status.isValid) {
-      this.confirmService.show('Invalid inputs',status.message,()=>{},{
-                          okText: 'Ok',
-                          isSuccess: false,
-                          isPrompt: true,
-                        });
-      return;
-    }
-    this.confirmService.show('Confirm Update', 'Are you sure you want to update this question?', () => {
-      this.onUpdateConfirmed();
-    }
-  
-  );
-      
-  }
-
-  onUpdateConfirmed =()=> {
-    let questionDto: QuestionDto = {
-      text: this.questionTextControl.value ?? '',
-      id: this.questionId ? Number(this.questionId) : 0, 
-      choices: this.choices.map(
-        (c): Choice => ({
-          id: c.id ? Number(c.id) : 0, 
-          isCorrect: c.isCorrect ?? false,
-          questionId: this.questionId ? Number(this.questionId) : 0,
-          text: c.text,
-        })
-      ), 
-
-    };
-
-    this.questionService
-      .updateQuestion(Number(this.questionId), questionDto)
-      .subscribe({
-        next: (response) => {
-          console.log('Question updated successfully:', response);
-          this.confirmService.show('Success','Question updated successfully!',()=>{
+        this.confirmService.show(
+          'Success',
+          'Question updated successfully!',
+          () => {
             this.router.navigate(['/dashboard/exams', this.examId]);
           },
           {
@@ -285,48 +224,118 @@ export class AddQuestion implements OnInit {
             isSuccess: true,
             isPrompt: true,
           }
-          
         );
+      },
+      error: async (err) => {
+        console.error('Error creating question:', await err.message);
+        this.confirmService.show(
+          'Error',
+          'Failed to create question. Please try again.',
+          () => {},
+          {
+            okText: 'Ok',
+            isSuccess: false,
+            isPrompt: true,
+          }
+        );
+      },
+    });
+  };
 
+  onUpdate() {
+    console.log(this.questionText, this.questionTextControl);
+    let status = this.isValidData();
+    if (!status.isValid) {
+      this.confirmService.show('Invalid inputs', status.message, () => {}, {
+        okText: 'Ok',
+        isSuccess: false,
+        isPrompt: true,
+      });
+      return;
+    }
+    this.confirmService.show(
+      'Confirm Update',
+      'Are you sure you want to update this question?',
+      () => {
+        this.onUpdateConfirmed();
+      }
+    );
+  }
+
+  onUpdateConfirmed = () => {
+    let questionDto: QuestionDto = {
+      text: this.questionTextControl.value ?? '',
+      id: this.questionId ? Number(this.questionId) : 0,
+      choices: this.choices.map(
+        (c): Choice => ({
+          id: c.id ? Number(c.id) : 0,
+          isCorrect: c.isCorrect ?? false,
+          questionId: this.questionId ? Number(this.questionId) : 0,
+          text: c.text,
+        })
+      ),
+    };
+
+    this.questionService
+      .updateQuestion(Number(this.questionId), questionDto)
+      .subscribe({
+        next: (response) => {
+          console.log('Question updated successfully:', response);
+          this.confirmService.show(
+            'Success',
+            'Question updated successfully!',
+            () => {
+              this.router.navigate(['/dashboard/exams', this.examId]);
+            },
+            {
+              okText: 'Ok',
+              isSuccess: true,
+              isPrompt: true,
+            }
+          );
         },
         error: (err) => {
           console.error('Error updating question:', err);
-          this.confirmService.show('Error', 'Failed to update question. Please try again.', () => {},
-                        {
-                          okText: 'Ok',
-                          isSuccess: false,
-                          isPrompt: true,
-                        });
+          this.confirmService.show(
+            'Error',
+            'Failed to update question. Please try again.',
+            () => {},
+            {
+              okText: 'Ok',
+              isSuccess: false,
+              isPrompt: true,
+            }
+          );
         },
       });
-  }
-  
+  };
+
   toggleCorrect(choice: Choice) {
     choice.isCorrect = !choice.isCorrect;
     this.markChoiceAsUpdated(choice);
   }
   getChoiceLabel(index: number): string {
-
-    return String.fromCharCode(65 + index); 
+    return String.fromCharCode(65 + index);
   }
-  
-  isValidData(): {isValid:boolean, message:string} {
-    if(!this.questionTextControl.valid) 
-      return {isValid:false, message:'Question text is required.'};
-    if (! (this.choices.length > 1)) 
-      return {isValid:false, message:'At least two choices are required.'};
-    
+
+  isValidData(): { isValid: boolean; message: string } {
+    if (!this.questionTextControl.valid)
+      return { isValid: false, message: 'Question text is required.' };
+    if (!(this.choices.length > 1))
+      return { isValid: false, message: 'At least two choices are required.' };
+
     let hasEmptyChoice = !this.choices.every(
-          (choice) => choice.text.trim() !== ''
-        ) 
-    if(hasEmptyChoice)
-        return {isValid:false, message:"Choice can't be empty."};
+      (choice) => choice.text.trim() !== ''
+    );
+    if (hasEmptyChoice)
+      return { isValid: false, message: "Choice can't be empty." };
     let hasCorrectChoice = this.choices.some((choice) => choice.isCorrect);
-    if (!hasCorrectChoice)  
-      return {isValid:false, message:'At least one choice must be marked as correct.'};
+    if (!hasCorrectChoice)
+      return {
+        isValid: false,
+        message: 'At least one choice must be marked as correct.',
+      };
 
-    return {isValid:true, message:'Valid data'};
-
-
+    return { isValid: true, message: 'Valid data' };
   }
 }

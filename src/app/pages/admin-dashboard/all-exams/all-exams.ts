@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Table } from '../../../shared/table/table';
 import { Exam } from '../../../models/exam';
@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../../../shared/dialog/dialog';
 import { CustomInput } from '../../../shared/custom-input/custom-input';
 import { Button } from '../../../shared/button/button';
-import { ConfirmService } from '../../../shared/confirm/confirm.service';
+import { ConfirmService } from '../../../services/confirm.service';
 import { CreateExam } from '../../../models/dtos/Exam/CreateExam';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
   imports: [CommonModule, Table, CustomInput, Button, ReactiveFormsModule],
   templateUrl: './all-exams.html',
   styleUrl: './all-exams.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllExams implements OnInit {
   columns = [
@@ -39,7 +40,7 @@ export class AllExams implements OnInit {
 
   exams: Exam[] = [];
   loading = false;
-  searchTerm = new FormControl(''); 
+  searchTerm = new FormControl('');
   paginationInfo = {
     currentPage: 1,
     totalPages: 1,
@@ -68,6 +69,8 @@ export class AllExams implements OnInit {
 
   fetchExams(): void {
     this.loading = true;
+    this.cdr.markForCheck();
+
     const name = this.searchTerm.value || '';
     const sortBy = this.currentSort?.field || 'id';
     const isDesc = this.currentSort?.direction === 'desc';
@@ -83,13 +86,17 @@ export class AllExams implements OnInit {
           this.paginationInfo.currentPage = res.currentPage;
 
           this.loading = false;
-          this.cdr.detectChanges();
+          // this.cdr.detectChanges();
+          // setTimeout(() => this.cdr.detectChanges());
+          this.cdr.markForCheck();
+
         },
         error: (err) => {
           console.error('❌ Error fetching exams:', err);
           this.exams = [];
           this.loading = false;
-          this.cdr.detectChanges();
+          // this.cdr.detectChanges();
+          this.cdr.markForCheck();
         },
       });
   }
@@ -100,6 +107,7 @@ export class AllExams implements OnInit {
         title: action === 'edit' ? 'Edit Exam' : 'Add Exam',
         action,
         exam,
+        formType: 'exam',
       },
       width: '500px',
     });
@@ -187,14 +195,18 @@ export class AllExams implements OnInit {
           },
           error: () => this.toast.show('Failed to delete exam', 'error'),
         });
+      },
+      {
+        isSuccess: false,
+        okText: 'Delete',
       }
     );
   }
 
   private viewExam(exam: Exam) {
-    if (exam?.id) 
+    if (exam?.id)
       this.router.navigateByUrl(`/dashboard/exams/${exam.id}`);
   }
 
-  
+
 }

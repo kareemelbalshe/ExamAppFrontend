@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfirmService } from './confirm.service';
-import { CustomInput } from "../custom-input/custom-input";
-import { Button } from "../button/button";
+import { ConfirmService } from '../../services/confirm.service';
+import { CustomInput } from '../custom-input/custom-input';
+import { Button } from '../button/button';
 
 @Component({
   selector: 'app-confirm',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './confirm.html',
-  styleUrls: ['./confirm.css']
+  styleUrls: ['./confirm.css'],
 })
 export class Confirm {
   constructor(public confirm: ConfirmService) {}

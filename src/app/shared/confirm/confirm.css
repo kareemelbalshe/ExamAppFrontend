@@ -4,7 +4,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,7 +17,7 @@
   padding: 24px 20px;
   border-radius: 10px;
   width: 90%;
-  max-width: 400px;
+  max-width: fit-content;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   text-align: center;
   animation: fadeInUp 0.3s ease;
@@ -52,7 +52,6 @@
 }
 .confirm-success {
   background: linear-gradient(to right, #28a745, #218838);
-
 }
 .confirm-success:hover {
   background: linear-gradient(to right, #218838, #28a745);

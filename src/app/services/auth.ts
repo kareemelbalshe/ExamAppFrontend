@@ -23,14 +23,15 @@ export class Auth {
       tap((response: any) => {
         this.role = response.data.role;
         localStorage.setItem('token', response.data.token);
-        this.loggedIn.next(true); // ✅ تحديث الحالة
+        localStorage.setItem('userId', response.data.id);
+        this.loggedIn.next(true);
       })
     );
   }
 
   logout() {
     localStorage.removeItem('token');
-    this.loggedIn.next(false); // ✅ تحديث الحالة
+    this.loggedIn.next(false);
   }
 
   isAuthenticated(): boolean {
@@ -39,6 +40,9 @@ export class Auth {
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+  getUserId(): string | null {
+    return localStorage.getItem('userId');
   }
 
   isAdmin(): boolean {

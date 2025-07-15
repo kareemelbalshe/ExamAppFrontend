@@ -46,7 +46,9 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: AdminDashboard,
-    canActivate: [authGuard, isAdminGuard],
+    canActivate: [authGuard,
+      isAdminGuard
+    ],
     children: [
       {
         path: 'exams',
@@ -54,6 +56,30 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/admin-dashboard/all-exams/all-exams').then(
             (m) => m.AllExams
+          ),
+      },
+      {
+        path: 'students',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./pages/admin-dashboard/students/students').then(
+            (m) => m.AllStudents
+          ),
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./pages/admin-dashboard/statistics/statistics').then(
+            (m) => m.StatisticsComponent
+          ),
+      },
+      {
+        path: 'statistics',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./pages/admin-dashboard/statistics/statistics').then(
+            (m) => m.StatisticsComponent
           ),
       },
       {
