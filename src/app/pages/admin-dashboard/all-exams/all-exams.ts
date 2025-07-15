@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../../../shared/dialog/dialog';
 import { CustomInput } from '../../../shared/custom-input/custom-input';
 import { Button } from '../../../shared/button/button';
-import { ConfirmService } from '../../../shared/confirm/confirm.service';
+import { ConfirmService } from '../../../services/confirm.service';
 import { CreateExam } from '../../../models/dtos/Exam/CreateExam';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -39,7 +39,7 @@ export class AllExams implements OnInit {
 
   exams: Exam[] = [];
   loading = false;
-  searchTerm = new FormControl(''); 
+  searchTerm = new FormControl('');
   paginationInfo = {
     currentPage: 1,
     totalPages: 1,
@@ -193,9 +193,9 @@ export class AllExams implements OnInit {
   }
 
   private viewExam(exam: Exam) {
-    if (exam?.id) 
+    if (exam?.id)
       this.router.navigateByUrl(`/dashboard/exams/${exam.id}`);
   }
 
-  
+
 }

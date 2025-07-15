@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../../../shared/dialog/dialog';
 import { CustomInput } from '../../../shared/custom-input/custom-input';
 import { Button } from '../../../shared/button/button';
-import { ConfirmService } from '../../../shared/confirm/confirm.service';
+import { ConfirmService } from '../../../services/confirm.service';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';

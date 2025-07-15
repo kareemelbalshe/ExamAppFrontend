@@ -1,1 +1,85 @@
-<p>take-exam works!</p>
+<div class="exam-container">
+  <div class="exam-header text-center">
+    <h2>{{ exam?.title }}</h2>
+    <p>{{ exam?.description }}</p>
+  </div>
+
+  <div class="timer-circle-container">
+    <svg class="timer-svg" viewBox="0 0 100 100">
+      <circle class="timer-background" cx="50" cy="50" r="45"></circle>
+      <circle
+        class="timer-progress"
+        cx="50"
+        cy="50"
+        r="45"
+        [attr.stroke-dashoffset]="dashOffset"
+        [style.stroke]="color"
+      ></circle>
+      <text x="50" y="55" class="timer-text">{{ displayTime }}</text>
+    </svg>
+  </div>
+
+  <div class="question-nav my-3 d-flex flex-wrap justify-content-center gap-2">
+    <button
+      *ngFor="let q of questions; let i = index"
+      class="btn btn-sm"
+      [ngClass]="{
+        'btn-outline-secondary': currentIndex !== i && !choices[q.id],
+        'btn-outline-success': choices[q.id] && currentIndex !== i,
+        'btn-primary': currentIndex === i
+      }"
+      (click)="goToQuestion(i)"
+    >
+      Q{{ i + 1 }}
+    </button>
+  </div>
+
+  <div class="question-section mt-4" *ngIf="currentQuestion">
+    <h4>Q{{ currentIndex + 1 }}: {{ currentQuestion.text }}</h4>
+
+    <div class="choices mt-3">
+      <div *ngFor="let choice of currentQuestion.choices" class="form-check">
+        <input
+          title="choice"
+          class="form-check-input"
+          type="radio"
+          name="choice"
+          [value]="choice.id"
+          [(ngModel)]="choices[currentQuestion.id]"
+          id="choice-{{ choice.id }}"
+        />
+        <label class="form-check-label" [for]="'choice-' + choice.id">
+          {{ choice.text }}
+        </label>
+      </div>
+    </div>
+
+    <div class="navigation-buttons mt-4 d-flex justify-content-between">
+      <button
+        class="btn btn-secondary"
+        (click)="prevQuestion()"
+        [disabled]="currentIndex === 0"
+      >
+        Previous
+      </button>
+
+      <button
+        class="btn btn-success"
+        *ngIf="currentIndex === questions.length - 1"
+        (click)="submitExam()"
+        [disabled]="!choices[currentQuestion.id]"
+      >
+        Submit Exam
+      </button>
+
+      <button
+        class="btn btn-primary"
+        *ngIf="currentIndex < questions.length - 1"
+        (click)="nextQuestion()"
+        [disabled]="!choices[currentQuestion.id]"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

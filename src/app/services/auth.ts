@@ -23,6 +23,7 @@ export class Auth {
       tap((response: any) => {
         this.role = response.data.role;
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userId', response.data.id);
         this.loggedIn.next(true);
       })
     );
@@ -39,6 +40,9 @@ export class Auth {
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+  getUserId(): string | null {
+    return localStorage.getItem('userId');
   }
 
   isAdmin(): boolean {

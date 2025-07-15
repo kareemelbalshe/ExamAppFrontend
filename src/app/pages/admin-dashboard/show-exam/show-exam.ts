@@ -1,4 +1,4 @@
-import { ConfirmService } from './../../../shared/confirm/confirm.service';
+import { ConfirmService } from '../../../services/confirm.service';
 
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Question } from '../../../models/question';
@@ -21,14 +21,14 @@ import { Exam } from '../../../models/exam';
     trigger('slideToggle', [
       transition(':enter', [
         style({ height: '0px', opacity: 0 }),
-        animate('250ms ease-out', style({ height: '*', opacity: 1 }))
+        animate('250ms ease-out', style({ height: '*', opacity: 1 })),
       ]),
       transition(':leave', [
         style({ height: '*', opacity: 1 }),
-        animate('250ms ease-in', style({ height: '0px', opacity: 0 }))
-      ])
-    ])
-  ]
+        animate('250ms ease-in', style({ height: '0px', opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class ShowExam implements OnInit {
   examId = 1;
@@ -45,16 +45,16 @@ export class ShowExam implements OnInit {
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private confirmService: ConfirmService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.examId = +params['id'];
       this.loadExam();
       this.loadQuestions();
     });
   }
-  loadExam(){
+  loadExam() {
     this.isLoading = true;
     this.examService.getExamById(this.examId).subscribe({
       next: (exam) => {
@@ -68,39 +68,39 @@ export class ShowExam implements OnInit {
         this.error = 'Failed to load exam';
         this.isLoading = false;
         this.cdr.detectChanges(); // Ensure view updates after error
-      }
+      },
     });
   }
   loadQuestions() {
     this.isLoading = true;
-    let x = this.questionsService.getQuestionsByExamIdWithChoices(this.examId).subscribe({
-      next: (response) => {
-        console.log('Questions loaded:', response.data);
-        let responseQuestions = response?.data?.$values || [];
-        if (!Array.isArray(responseQuestions)) {
-          this.questions = []
-        }
-        else {
-          let extractedQuestions = responseQuestions.map((q: any) => {
-            console.log('Choices for question:', q?.choices.$values);
-            
-            q.choices = q?.choices?.$values || [];
-            return q ;
-          });
-          this.questions = extractedQuestions;
-          console.log('Extracted questions:', this.questions);
+    let x = this.questionsService
+      .getQuestionsByExamIdWithChoices(this.examId)
+      .subscribe({
+        next: (response) => {
+          console.log('Questions loaded:', response.data);
+          let responseQuestions = response?.data?.$values || [];
+          if (!Array.isArray(responseQuestions)) {
+            this.questions = [];
+          } else {
+            let extractedQuestions = responseQuestions.map((q: any) => {
+              console.log('Choices for question:', q?.choices.$values);
 
-        }
-        this.isLoading = false;
-        this.cdr.detectChanges(); // Ensure view updates after async operation
-      },
-      error: (err) => {
-        console.error('Failed to load questions', err);
-        this.error = 'Failed to load questions';
-        this.isLoading = false;
-        this.cdr.detectChanges(); // Ensure view updates after error
-      }
-    });
+              q.choices = q?.choices?.$values || [];
+              return q;
+            });
+            this.questions = extractedQuestions;
+            console.log('Extracted questions:', this.questions);
+          }
+          this.isLoading = false;
+          this.cdr.detectChanges(); // Ensure view updates after async operation
+        },
+        error: (err) => {
+          console.error('Failed to load questions', err);
+          this.error = 'Failed to load questions';
+          this.isLoading = false;
+          this.cdr.detectChanges(); // Ensure view updates after error
+        },
+      });
   }
 
   toggleExpand(questionId: number) {
@@ -125,25 +125,27 @@ export class ShowExam implements OnInit {
         isSuccess: false,
       }
     );
-    
   }
-  onDeleteConfirm = (questionId:number)=> {
+  onDeleteConfirm = (questionId: number) => {
     this.questionsService.deleteQuestion(questionId).subscribe({
       next: () => this.loadQuestions(),
       error: (error) => {
-        this.confirmService.show('Error', `Failed to delete question. Please try again.`, () => {},{
-                                                      okText: 'Ok',
-                                                      isSuccess: false,
-                                                      isPrompt: true
-                                                    }
-                                );
-      }
+        this.confirmService.show(
+          'Error',
+          `Failed to delete question. Please try again.`,
+          () => {},
+          {
+            okText: 'Ok',
+            isSuccess: false,
+            isPrompt: true,
+          }
+        );
+      },
     });
-  }
+  };
 
   onEdit(question: QuestionDto) {
-
-    this.router.navigateByUrl(`/dashboard/question/edit/${question.id}`)
+    this.router.navigateByUrl(`/dashboard/question/edit/${question.id}`);
   }
 
   onAdd() {
