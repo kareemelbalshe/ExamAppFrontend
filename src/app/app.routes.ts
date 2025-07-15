@@ -29,7 +29,7 @@ export const routes: Routes = [
         path: 'register',
         component: Register,
       },
-      { path: 'profile', component: Profile, canActivate: [authGuard] },
+      { path: 'profile/:studentId', component: Profile, canActivate: [authGuard] },
       {
         path: 'show-result/:resultId',
         component: ShowResult,

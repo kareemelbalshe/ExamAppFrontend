@@ -61,7 +61,7 @@
 
     <ng-template #logged>
       <li class="nav-item mx-1">
-        <a class="nav-link" routerLink="/profile">
+        <a class="nav-link" [routerLink]="['/profile', studentId]">
           <i class="fa fa-user"></i>
           Profile</a
         >
