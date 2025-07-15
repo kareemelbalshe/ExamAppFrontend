@@ -195,7 +195,7 @@ export class AllStudents implements OnInit {
 
   private viewStudent(student: Student) {
     if (student?.id) {
-      this.router.navigate(['/student/result', student.id]);
+      this.router.navigate(['dashboard/student/result', student.id]);
     }
   }
 

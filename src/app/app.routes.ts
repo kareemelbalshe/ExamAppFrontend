@@ -67,6 +67,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'student/result/:studentId',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./pages/admin-dashboard/show-result/show-result').then(
+            (m) => m.ShowResults
+          ),
+      },
+      {
         path: '',
         pathMatch: 'full',
         loadComponent: () =>
