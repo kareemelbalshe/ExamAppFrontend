@@ -1,0 +1,7 @@
+<div class="container my-4 text-center">
+  <div class="header animate-fade-in text-center mb-5" *ngIf="!isLoading">
+    <h1 class="display-5 fw-bold">📊 Score {{ result?.score }}</h1>
+    <p> Start time: {{ result?.startTime | date : "medium" }}</p>
+    <p> End time: {{ result?.endTime | date : "medium" }}</p>
+  </div>
+</div>

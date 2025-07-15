@@ -7,7 +7,7 @@ import { Result, ResultWithDetails } from '../../models/result';
 interface ResultResponse {
   data: {
     $values: ResultWithDetails[];
-  };  
+  };
 }
 @Injectable({
   providedIn: 'root'
@@ -26,5 +26,9 @@ export class ResultService {
 
   updateResult(result: Result) {
     return this.http.put(`${this.baseUrl}/Result/${result.id}`, result);
+  }
+
+  getResultById(id: number) {
+    return this.http.get(`${this.baseUrl}/Result/${id}`);
   }
 }

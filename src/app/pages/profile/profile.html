@@ -1,4 +1,9 @@
 <div class="container my-4">
+  <div class="text-start mb-3">
+    <button class="btn btn-outline-secondary" (click)="goBack()">
+      <i class="fas fa-arrow-left me-1"></i> Back
+    </button>
+  </div>
   <div class="header animate-fade-in text-center mb-5" *ngIf="!isLoading">
     <h1 class="display-5 fw-bold">📊 {{ student?.username }}'s Exam Results</h1>
   </div>
