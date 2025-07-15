@@ -1,6 +1,6 @@
 .sidebar {
   width: 220px;
-  background: #1a2332;
+  background: #0f0f00;
   color: #fff;
   height: 100vh;
   padding-top: 20px;
@@ -30,7 +30,12 @@
 }
 .sidebar a.active,
 .sidebar a:hover {
-  background: #2e3b55;
+    background: #2d2d2d;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    -ms-border-radius: 0px;
+    -o-border-radius: 0px;
 }
 .sidebar .material-icons {
   margin-right: 12px;

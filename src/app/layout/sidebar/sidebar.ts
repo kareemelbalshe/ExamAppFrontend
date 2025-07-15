@@ -15,14 +15,13 @@ export class SidebarComponent {
   authService = inject(Auth);
   logout() {
     this.authService.logout();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
   }
 
   sidebarItems: SidebarItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard/statistics' },
     { label: 'Exams', icon: 'assignment', route: '/dashboard/exams' },
-    { label: 'Questions', icon: 'help', route: '/dashboard/questions' },
-    { label: 'Results', icon: 'bar_chart', route: '/dashboard/results' },
+    
     { label: 'Students', icon: 'group', route: '/dashboard/students' },
     { label: 'Logout', icon: 'logout', isLogout: true },
   ];

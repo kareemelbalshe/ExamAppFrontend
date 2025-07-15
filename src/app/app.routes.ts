@@ -67,6 +67,22 @@ export const routes: Routes = [
           ),
       },
       {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./pages/admin-dashboard/statistics/statistics').then(
+            (m) => m.StatisticsComponent
+          ),
+      },
+      {
+        path: 'statistics',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./pages/admin-dashboard/statistics/statistics').then(
+            (m) => m.StatisticsComponent
+          ),
+      },
+      {
         path: 'exams/:id',
         component: ShowExam,
       },

@@ -11,7 +11,7 @@
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 1rem;
-  color: #333;
+  /* color: #333; */
 }
 
 .table-row {
@@ -219,4 +219,37 @@
 .dark-mode .status-inactive {
   background-color: rgba(220, 53, 69, 0.2);
   border-color: rgba(220, 53, 69, 0.3);
+}
+
+
+.badge-easy {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.badge-medium {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.badge-hard {
+  background-color: #fde68a;
+  color: #92400e;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.badge-very-hard {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
 }
