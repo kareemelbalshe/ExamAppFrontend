@@ -14,6 +14,7 @@ import {
   query,
   stagger
 } from '@angular/animations';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-show-result',
@@ -25,5 +26,6 @@ import {
 export class ShowResult {
 
   constructor(){}
+
 }
 

@@ -31,6 +31,11 @@ export class AdminDashboard {
     localStorage.setItem('dark', this.darkMode.toString());
     document.body.classList.toggle('dark-mode', this.darkMode);
     this.updateContainerTheme();
+
+
+    window.dispatchEvent(new CustomEvent('themeChanged', {
+      detail: { dark: this.darkMode }
+    }));
   }
 
   private updateContainerTheme() {

@@ -32,6 +32,10 @@ export class Header implements OnInit {
     this.darkMode = !this.darkMode;
     localStorage.setItem('dark', this.darkMode.toString());
     document.body.classList.toggle('dark-mode', this.darkMode);
+
+    window.dispatchEvent(new CustomEvent('themeChanged', {
+    detail: { dark: this.darkMode }
+  }));
   }
 
   logout() {
