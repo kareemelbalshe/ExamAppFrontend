@@ -48,13 +48,13 @@ export class ShowResult implements OnInit {
     private router: Router,
     private activeRoute: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-      private location: Location
-    
+    private location: Location
+
   ) { }
 
   goBack() {
-  this.location.back();
-}
+    this.location.back();
+  }
 
   ngOnInit() {
     this.activeRoute.params.subscribe(params => {
