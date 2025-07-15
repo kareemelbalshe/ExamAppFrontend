@@ -98,5 +98,10 @@ export const routes: Routes = [
       },
     ],
   },
+
+  {
+    path: "student/result",
+    component: ShowResult,
+  },
   { path: '**', component: NotFound },
 ];
