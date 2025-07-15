@@ -14,6 +14,7 @@ import {
   query,
   stagger
 } from '@angular/animations';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-show-result',
@@ -46,8 +47,14 @@ export class ShowResult implements OnInit {
     private studentService: StudentService,
     private router: Router,
     private activeRoute: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+      private location: Location
+    
   ) { }
+
+  goBack() {
+  this.location.back();
+}
 
   ngOnInit() {
     this.activeRoute.params.subscribe(params => {

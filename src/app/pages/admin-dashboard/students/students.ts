@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Table } from '../../../shared/table/table';
 
@@ -12,6 +12,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { CreateStudent, Student } from '../../../models/user';
 import { StudentService } from '../../../services/student/student';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-students',
@@ -21,6 +22,8 @@ import { StudentService } from '../../../services/student/student';
   styleUrls: ['./students.css'],
 })
 export class AllStudents implements OnInit {
+  router = inject(Router);
+
   columns = [
     { label: 'ID', field: 'id', sortable: true },
     { label: 'Username', field: 'username', sortable: true },
@@ -184,13 +187,16 @@ export class AllStudents implements OnInit {
       }
       ,
       {
-        isSuccess:false,
+        isSuccess: false,
         okText: 'Delete',
       }
     );
   }
 
   private viewStudent(student: Student) {
-    console.log('View student:', student);
+    if (student?.id) {
+      this.router.navigate(['/student/result', student.id]);
+    }
   }
+
 }
