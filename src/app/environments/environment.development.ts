@@ -1,4 +1,4 @@
 export const environment = {
-  baseUrl: 'https://localhost:7105/api',
+  baseUrl: 'https://exam-app.up.railway.app/api',
   production: false,
 };

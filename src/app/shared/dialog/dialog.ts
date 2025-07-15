@@ -15,7 +15,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Exam } from '../../models/exam';
 import { Student } from '../../models/user';
-import { Button } from '../button/button';
+
+import { Button } from "../button/button";
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-dialog',
@@ -120,6 +122,24 @@ export class DialogComponent implements OnInit {
     return `${hours}:${minutes}`;
   }
 
+  formatToLocalISO(date: Date): string {
+    const offset = date.getTimezoneOffset() * 60000;
+    const localTime = new Date(date.getTime() - offset);
+    return localTime.toISOString().slice(0, 19); // "YYYY-MM-DDTHH:mm:ss"
+  }
+
+  combineDateTime(date: Date, time: string): Date {
+    const [hours, minutes] = time.split(':').map(Number);
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      hours,
+      minutes,
+      0
+    );
+  }
+
   onSubmit(): void {
     this.dateTimeError = '';
 
@@ -159,10 +179,11 @@ export class DialogComponent implements OnInit {
       const examData: Exam = {
         ...formValue,
         id: this.data?.exam?.id,
-        startTime: startDateTime.toISOString(),
-        endTime: endDateTime.toISOString(),
+        startTime: this.formatToLocalISO(startDateTime),
+        endTime: this.formatToLocalISO(endDateTime),
       };
 
+      console.log('✅ Exam Data to Submit:', examData);
       this.dialogRef.close(examData);
     }
 
@@ -184,13 +205,6 @@ export class DialogComponent implements OnInit {
     }
 
     this.loading = false;
-  }
-
-  combineDateTime(date: Date, time: string): Date {
-    const [hours, minutes] = time.split(':').map(Number);
-    const combined = new Date(date);
-    combined.setHours(hours, minutes, 0, 0);
-    return combined;
   }
 
   close(): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Table } from '../../../shared/table/table';
 import { Exam } from '../../../models/exam';
@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
   imports: [CommonModule, Table, CustomInput, Button, ReactiveFormsModule],
   templateUrl: './all-exams.html',
   styleUrl: './all-exams.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllExams implements OnInit {
   columns = [
@@ -68,6 +69,8 @@ export class AllExams implements OnInit {
 
   fetchExams(): void {
     this.loading = true;
+    this.cdr.markForCheck();
+
     const name = this.searchTerm.value || '';
     const sortBy = this.currentSort?.field || 'id';
     const isDesc = this.currentSort?.direction === 'desc';
@@ -83,13 +86,17 @@ export class AllExams implements OnInit {
           this.paginationInfo.currentPage = res.currentPage;
 
           this.loading = false;
-          this.cdr.detectChanges();
+          // this.cdr.detectChanges();
+          // setTimeout(() => this.cdr.detectChanges());
+          this.cdr.markForCheck();
+
         },
         error: (err) => {
           console.error('❌ Error fetching exams:', err);
           this.exams = [];
           this.loading = false;
-          this.cdr.detectChanges();
+          // this.cdr.detectChanges();
+          this.cdr.markForCheck();
         },
       });
   }
@@ -188,6 +195,10 @@ export class AllExams implements OnInit {
           },
           error: () => this.toast.show('Failed to delete exam', 'error'),
         });
+      },
+      {
+        isSuccess: false,
+        okText: 'Delete',
       }
     );
   }

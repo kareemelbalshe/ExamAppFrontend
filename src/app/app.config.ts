@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
@@ -23,7 +23,9 @@ export const appConfig: ApplicationConfig = {
     },
 
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-    provideNativeDateAdapter()
+    provideNativeDateAdapter(),
+    { provide: LOCALE_ID, useValue: 'en-GB' }
+
 
   ]
 };

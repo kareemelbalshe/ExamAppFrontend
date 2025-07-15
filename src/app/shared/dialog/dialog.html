@@ -10,10 +10,8 @@
       <mat-label>Exam Title</mat-label>
       <input matInput formControlName="title" required />
       <mat-error
-        *ngIf="
-          examForm.get('title')?.hasError('required') &&
-          examForm.get('title')?.touched
-        "
+
+        *ngIf="examForm.get('title')?.hasError('required') && examForm.get('title')?.touched"
       >
         Title is required
       </mat-error>
@@ -41,10 +39,8 @@
         ></mat-datepicker-toggle>
         <mat-datepicker #startDatePicker></mat-datepicker>
         <mat-error
-          *ngIf="
-            examForm.get('startDate')?.hasError('required') &&
-            examForm.get('startDate')?.touched
-          "
+
+          *ngIf="examForm.get('startDate')?.hasError('required') && examForm.get('startDate')?.touched"
         >
           Start date is required
         </mat-error>
@@ -52,19 +48,10 @@
 
       <mat-form-field appearance="outline" class="form-field time-field">
         <mat-label>Start Time</mat-label>
-        <input
-          title="time"
-          matInput
-          type="time"
-          formControlName="startTime"
-          required
-        />
+        <input matInput type="time" formControlName="startTime" required />
         <mat-error
-          style="min-width: max-content"
-          *ngIf="
-            examForm.get('startTime')?.hasError('required') &&
-            examForm.get('startTime')?.touched
-          "
+          style="min-width: max-content;"
+          *ngIf="examForm.get('startTime')?.hasError('required') && examForm.get('startTime')?.touched"
         >
           Start time is required
         </mat-error>
@@ -88,10 +75,7 @@
         ></mat-datepicker-toggle>
         <mat-datepicker #endDatePicker></mat-datepicker>
         <mat-error
-          *ngIf="
-            examForm.get('endDate')?.hasError('required') &&
-            examForm.get('endDate')?.touched
-          "
+          *ngIf="examForm.get('endDate')?.hasError('required') && examForm.get('endDate')?.touched"
         >
           End date is required
         </mat-error>
@@ -99,19 +83,10 @@
 
       <mat-form-field appearance="outline" class="form-field time-field">
         <mat-label>End Time</mat-label>
-        <input
-          title="time"
-          matInput
-          type="time"
-          formControlName="endTime"
-          required
-        />
+        <input matInput type="time" formControlName="endTime" required />
         <mat-error
-          style="min-width: max-content"
-          *ngIf="
-            examForm.get('endTime')?.hasError('required') &&
-            examForm.get('endTime')?.touched
-          "
+          style="min-width: max-content;"
+          *ngIf="examForm.get('endTime')?.hasError('required') && examForm.get('endTime')?.touched"
         >
           End time is required
         </mat-error>
@@ -120,6 +95,22 @@
 
     <div *ngIf="dateTimeError" class="error-message">
       {{ dateTimeError }}
+    </div>
+
+    <div
+      *ngIf="data.formType === 'exam'"
+      mat-dialog-actions
+      class="dialog-actions"
+    >
+      <button mat-button type="button" (click)="close()">Cancel</button>
+      <button
+        mat-button
+        type="submit"
+        [disabled]="examForm.invalid || loading"
+        (click)="onSubmit()"
+      >
+        {{ data.action === 'edit' ? 'Update' : 'Add' }}
+      </button>
     </div>
   </form>
 
@@ -158,16 +149,4 @@
       <button mat-button type="button" (click)="close()">Cancel</button>
     </div>
   </form>
-</div>
-
-<div *ngIf="data.formType === 'exam'" mat-dialog-actions class="dialog-actions">
-  <button mat-button type="button" (click)="close()">Cancel</button>
-  <button
-    mat-button
-    type="submit"
-    [disabled]="examForm.invalid || loading"
-    (click)="onSubmit()"
-  >
-    {{ data.action === "edit" ? "Update" : "Add" }}
-  </button>
 </div>
