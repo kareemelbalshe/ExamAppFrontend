@@ -6,13 +6,13 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ResultWithDetails } from '../../models/result';
 import { Student } from '../../models/user';
 import { ResultService } from '../../services/result/result.service';
 import { StudentService } from '../../services/student/student';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -39,7 +39,7 @@ import { CommonModule } from '@angular/common';
     ]),
   ],
 })
-export class Profile {
+export class Profile implements OnInit{
   results: ResultWithDetails[] = [];
   student?: Student;
   studentId?: number;
@@ -50,8 +50,13 @@ export class Profile {
     private studentService: StudentService,
     private router: Router,
     private activeRoute: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private location: Location
   ) {}
+
+  goBack() {
+    this.location.back();
+  }
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params) => {
