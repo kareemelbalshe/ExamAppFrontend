@@ -1,10 +1,10 @@
-
+// import { StudentService } from './../../services/student/student';
 import { StudentService } from './../../services/student/student';
-import { ResultSerivce } from './../../services/result/result.service';
+import { ResultService } from './../../services/result/result.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ResultWithDetails } from '../../models/result';
+import { Result, ResultWithDetails } from '../../models/result';
 import { Student } from '../../models/user';
 import {
   trigger,
@@ -14,9 +14,6 @@ import {
   query,
   stagger
 } from '@angular/animations';
-
-import { ResultService } from './../../services/result/result.service';
-import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-show-result',
@@ -45,13 +42,12 @@ export class ShowResult implements OnInit {
   isLoading: boolean = true;
 
   constructor(
-    private resultService: ResultSerivce,
+    private resultService: ResultService,
     private studentService: StudentService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) { }
-
 
   ngOnInit() {
     this.activeRoute.params.subscribe(params => {

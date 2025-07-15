@@ -2,11 +2,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
-import { Result } from '../../models/result';
+import { Result, ResultWithDetails } from '../../models/result';
 
 interface ResultResponse {
   data: {
-    $values: Result[];
+    $values: ResultWithDetails[];
   };  
 }
 @Injectable({
