@@ -15,9 +15,11 @@ export class Header implements OnInit {
   authService = inject(Auth);
   isLoggedIn = false;
   darkMode = localStorage.getItem('dark') === 'true';
+  studentId = localStorage.getItem('userId');
 
   constructor() {
     document.body.classList.toggle('dark-mode', this.darkMode);
+    this.studentId = localStorage.getItem('userId');
   }
 
   ngOnInit() {
