@@ -138,21 +138,22 @@
   padding: 4px 12px;
   font-weight: bold;
   color: #555;
-  border-radius: 50%;
+  border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
 }
 
 .pagination button:hover {
-  background-color: #f3f3f3;
+  background-color: #28a745;
+  color: white;
 }
 
 .pagination button.active {
-  background-color: #2e3b55;
+  background-color: #28a745;
   color: white;
 }
 
