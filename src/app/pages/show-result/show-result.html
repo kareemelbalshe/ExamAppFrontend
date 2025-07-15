@@ -1,1 +1,60 @@
-<p>show-result works!</p>
+<div class="container my-4">
+    <div class="header animate-fade-in text-center mb-5" *ngIf="!isLoading">
+        <h1 class="display-5 fw-bold">📊 {{ student?.username }}'s Exam Results</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-6 mb-4" *ngFor="let result of results" [@fadeInStagger]>
+            <div class="card result-card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title mb-2">{{ result.exam.title }}</h5>
+                    <h6 class="card-subtitle text-muted mb-4">Attempt #{{ result.attemptNumber }}</h6>
+
+                    <div class="result-details">
+                        <div class="detail-row">
+                            <span class="label">Description</span>
+                            <span class="value text-truncate">
+                                {{ result.exam.description | slice:0:80 }}{{ result.exam.description.length > 80 ? '...'
+                                : '' }}
+                            </span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="label">Score</span>
+                            <span class="value">
+                                <span class="badge bg-score">
+                                    {{ result.score }}
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="label">Status</span>
+                            <span class="value">
+                                <span class="badge" [ngClass]="{
+            'bg-status-success': result.status === 'Completed',
+            'bg-status-warning': result.status === 'Started',
+            'bg-status-fail': result.status === 'Failed'
+          }">
+                                    {{ result.status }}
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="label">Attempted At</span>
+                            <span class="value text-muted small">
+                                {{ result.takenAt | date:'medium' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center" *ngIf="results.length === 0 && !isLoading">
+        <p class="text-muted">No results found for this student.</p>
+    </div>
+</div>
