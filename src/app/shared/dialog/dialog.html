@@ -3,7 +3,7 @@
 <div mat-dialog-content class="dialog-content">
   <form *ngIf="data.formType === 'exam'" [formGroup]="examForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline" class="form-field">
-      <mat-label>Exam Title</mat-label>
+      <mat-label >Exam Title</mat-label>
       <input matInput formControlName="title" required />
       <mat-error *ngIf="examForm.get('title')?.hasError('required') && examForm.get('title')?.touched">
         Title is required
