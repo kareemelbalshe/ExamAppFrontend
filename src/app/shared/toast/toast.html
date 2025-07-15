@@ -2,9 +2,9 @@
   *ngIf="visible"
   class="toast"
   [ngClass]="[
-    visible ? 'show' : '',
+    'show',
     type,
-    isDarkMode() ? 'dark-mode' : ''
+    isDark ? 'dark-mode' : ''
   ]"
 >
   <span class="icon">{{ icon }}</span>
