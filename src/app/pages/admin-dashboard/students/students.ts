@@ -182,6 +182,11 @@ export class AllStudents implements OnInit {
           error: (e) => this.toast.show(e.error.message || 'Failed to delete student', 'error'),
         });
       }
+      ,
+      {
+        isSuccess:false,
+        okText: 'Delete',
+      }
     );
   }
 
