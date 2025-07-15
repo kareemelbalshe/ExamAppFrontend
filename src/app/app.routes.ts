@@ -46,7 +46,9 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: AdminDashboard,
-    canActivate: [authGuard, isAdminGuard],
+    canActivate: [authGuard,
+      // isAdminGuard
+    ],
     children: [
       {
         path: 'exams',
