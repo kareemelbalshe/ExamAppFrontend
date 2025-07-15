@@ -74,7 +74,7 @@ export const routes: Routes = [
   },
 
   {
-    path: "student/result",
+    path: "student/result/:studentId",
     component: ShowResult,
   },
   { path: '**', component: NotFound },
