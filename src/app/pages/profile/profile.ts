@@ -39,7 +39,7 @@ import { CommonModule, Location } from '@angular/common';
     ]),
   ],
 })
-export class Profile implements OnInit{
+export class Profile implements OnInit {
   results: ResultWithDetails[] = [];
   student?: Student;
   studentId?: number;
@@ -52,7 +52,7 @@ export class Profile implements OnInit{
     private activeRoute: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private location: Location
-  ) {}
+  ) { }
 
   goBack() {
     this.location.back();
@@ -106,7 +106,7 @@ export class Profile implements OnInit{
     this.resultService.getResultByStudentId(this.studentId).subscribe({
       next: (result) => {
         console.log('Result:', result);
-        this.results = result.data.$values || [];
+        this.results = result?.data?.$values?.filter(result => result.exam?.id != null && result.exam?.id != undefined) || [];
         this.cdr.detectChanges(); // Ensure the view is updated with the results data
       },
       error: (err) => {

@@ -102,7 +102,7 @@ export class ShowResults {
     this.resultService.getResultByStudentId(this.studentId).subscribe({
       next: (result) => {
         console.log('Result:', result);
-        this.results = result.data.$values || [];
+        this.results = result?.data?.$values?.filter(result => result.exam?.id != null && result.exam?.id != undefined) || [];
         this.cdr.detectChanges();
       },
       error: (err) => {

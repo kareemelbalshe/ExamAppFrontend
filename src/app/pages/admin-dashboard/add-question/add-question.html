@@ -9,6 +9,7 @@
                         class="form-control slim-textarea" placeholder="Enter question here" rows="1"></textarea>
                     <label for="questionText">Question Text</label> -->
                       <app-custom-input
+                            style="color: #28a745 !important;"
                             [label]="'Question Text'"
                             placeholder="Enter your question"
                             [control]="questionTextControl"
@@ -16,10 +17,10 @@
                 </div>
 
                 <!-- Choices Section -->
-                <div class="bg-white rounded border p-3 animated-slide">
+                <div class=" rounded border p-3 animated-slide mb-3">
                     <h6 class="mb-3 text-secondary">Choices</h6>
 
-                    <div class="d-flex align-items-center mb-2 p-2 bg-light rounded shadow-sm choice-item-hover"
+                    <div class="d-flex align-items-center mb-2 p-2 rounded shadow-sm choice-item-hover bak" 
                         [ngClass]="{'border-success border-2': choice.isCorrect}"
                         *ngFor="let choice of choices; let i = index" [@fadeSlide]>
                         <!-- Correct Toggle Box -->
@@ -31,7 +32,7 @@
                         </button>
 
                         <!-- Label (A, B, C, ...) -->
-                        <span class="me-2 fw-bold text-primary">{{ getChoiceLabel(i) }}</span>
+                        <span class="me-2 fw-bold" style="color: #28a745;">{{ getChoiceLabel(i) }}</span>
 
                         <!-- Choice Text -->
                         <input [(ngModel)]="choice.text" name="choice{{choice.id??i}}"
@@ -46,7 +47,7 @@
                         </button>
                     </div>
 
-                    <button type="button" class="btn btn-outline-primary btn-sm mt-2 rounded-pill add-choice-btn"
+                    <button type="button" class="btn btn-sm mt-2 rounded-pill add-choice-btn"
                         (click)="addChoice()">
                         <i class="bi bi-plus-lg me-1"></i> Add Choice
                     </button>
@@ -56,7 +57,7 @@
                 <!-- <button type="submit" class="btn btn-primary w-100 mt-4">
           {{ isEditMode ? 'Save Changes' : 'Create Question' }}
         </button> -->
-                <app-button [text]="isEditMode ? 'Save Changes' : 'Create Question'" [type]="'submit'"
+                <app-button class="mt-2" [text]="isEditMode ? 'Save Changes' : 'Create Question'" [type]="'submit'"
                     [btnStyle]="'primary'">
 
                 </app-button>

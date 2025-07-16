@@ -1,6 +1,8 @@
 .animated-fade {
   animation: fadeIn 0.5s ease-in;
-  background: linear-gradient(to bottom right, #f8f9fa, #e8ecf4);
+  /* background: linear-gradient(to bottom right, #f8f9fa, #e8ecf4); */
+  background: rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(10px);
 }
 
 .animated-slide {
@@ -24,33 +26,49 @@
 .choice-item-hover:hover {
   /* background-color: #f1f3f5; */
   transform: translateY(-2px);
-  background-color: #f0f8ff;
+  /* background-color: #f0f8ff; */
+  background: rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(10px);
 }
 
-.choice-item-hover:hover .correct-toggle-btn,.choice-item-hover:hover .delete-choice-btn{
+.choice-item-hover:hover .correct-toggle-btn,
+.choice-item-hover:hover .delete-choice-btn {
   opacity: 1;
 }
 .add-choice-btn {
   transition: all 0.3s;
+  color: #28a745;
 }
 
 .add-choice-btn:hover {
-  background-color: #0d6efd;
+  background-color: #28a745;
   color: white;
 }
 
+.bak {
+  background: rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(10px);
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(15px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
-
-
-
 
 .correct-toggle-btn {
   opacity: 0;
@@ -60,10 +78,9 @@
   font-size: 0.9rem;
 }
 
-.delete-choice-btn{
-    opacity: 0;
+.delete-choice-btn {
+  opacity: 0;
 }
-
 
 .correct-toggle-btn.btn-success {
   background-color: #28a745;
@@ -74,11 +91,10 @@
 .correct-toggle-btn.btn-outline-secondary {
   border: 1px solid #6c757d;
   color: #6c757d;
-  background-color: white;
+  /* background-color: white; */
+  background: rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(10px);
 }
-
-
-
 
 .correct-toggle-btn {
   opacity: 0;
@@ -116,14 +132,10 @@
 /* Border for marked correct choices */
 .choice-item-hover.border-success {
   border: 2px solid #28a745 !important;
-  background-color: #e8f5e9;
+  /* background-color: #e8f5e9; */
 }
 
-
-
-
 /*  *(****************************************************)*  */
-
 
 .correct-toggle-box {
   height: 28px;
@@ -146,11 +158,11 @@
 .correct-toggle-box.btn-outline-secondary {
   border: 1px solid #6c757d;
   color: #6c757d;
-  background-color: white;
+  /* background-color: white; */
 }
 
 /* Highlight for selected correct choices */
 .choice-item-hover.border-success {
   border: 2px solid #28a745 !important;
-  background-color: #e8f5e9;
+  /* background-color: #e8f5e9; */
 }
