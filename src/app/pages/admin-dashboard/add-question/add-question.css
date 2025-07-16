@@ -122,7 +122,9 @@
   background-color: white;
 }
 
-/* Position the toggle halfway between right edge and center */
+/*
+ Position the toggle halfway between right edge and center
+ */
 .correct-toggle-btn.position-absolute {
   top: 50%;
   right: 35%;
