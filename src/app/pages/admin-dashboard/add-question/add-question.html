@@ -1,7 +1,10 @@
 <div class="container my-4">
     <div class="card shadow rounded-3 animated-fade">
         <div class="card-body p-4">
-            <form (ngSubmit)="isEditMode? onUpdate(): onCreate()" #questionForm="ngForm">
+            <form (ngSubmit)="  isEditMode? 
+                                onUpdate(): 
+                                onCreate()" 
+                                #questionForm="ngForm">
 
                 <!-- Question Text -->
                 <div class="form-floating mb-4">
@@ -24,30 +27,46 @@
                         [ngClass]="{'border-success border-2': choice.isCorrect}"
                         *ngFor="let choice of choices; let i = index" [@fadeSlide]>
                         <!-- Correct Toggle Box -->
-                        <button type="button" class="correct-toggle-box me-2" (click)="toggleCorrect(choice)" [ngClass]="{
-                            'btn-success': choice.isCorrect,
-                            'btn-outline-secondary': !choice.isCorrect
-                            }" title="Mark as Correct">
-                            <i class="bi" [ngClass]="choice.isCorrect ? 'bi-check-lg' : ''"></i>
+                        <button type="button" 
+                                class="correct-toggle-box me-2" 
+                                (click)="toggleCorrect(choice)" 
+                                [ngClass]="{
+                                        'btn-success': choice.isCorrect,
+                                        'btn-outline-secondary': !choice.isCorrect
+                                    }" 
+                                title="Mark as Correct">
+                                
+                            <i  class="bi" 
+                                [ngClass]=" choice.isCorrect ?
+                                            'bi-check-lg' :
+                                            ''"
+                            ></i>
                         </button>
 
                         <!-- Label (A, B, C, ...) -->
-                        <span class="me-2 fw-bold" style="color: #28a745;">{{ getChoiceLabel(i) }}</span>
+                        <span   class="me-2 fw-bold" 
+                                style="color: #28a745;">{{ getChoiceLabel(i) }}
+                        </span>
 
                         <!-- Choice Text -->
-                        <input [(ngModel)]="choice.text" name="choice{{choice.id??i}}"
-                            (ngModelChange)="markChoiceAsUpdated(choice)" required
-                            class="form-control me-2 border-0 bg-white shadow-none" />
+                        <input  [(ngModel)]="choice.text" 
+                                name="choice{{choice.id??i}}"
+                                (ngModelChange)="markChoiceAsUpdated(choice)" 
+                                required
+                                class="form-control me-2 border-0 bg-white shadow-none" />
 
 
                         <!-- Delete Choice -->
-                        <button type="button" class="btn btn-outline-danger btn-sm rounded-circle ms-2"
-                            (click)="removeChoice(choice)">
-                            <i class="bi bi-x"></i>
+                        <button type="button" 
+                                class="btn btn-outline-danger btn-sm rounded-circle ms-2"
+                                (click)="removeChoice(choice)">
+                            
+                                <i class="bi bi-x"></i>
                         </button>
                     </div>
 
-                    <button type="button" class="btn btn-sm mt-2 rounded-pill add-choice-btn"
+                    <button type="button" 
+                            class="btn btn-sm mt-2 rounded-pill add-choice-btn"
                         (click)="addChoice()">
                         <i class="bi bi-plus-lg me-1"></i> Add Choice
                     </button>
@@ -57,7 +76,12 @@
                 <!-- <button type="submit" class="btn btn-primary w-100 mt-4">
           {{ isEditMode ? 'Save Changes' : 'Create Question' }}
         </button> -->
-                <app-button class="mt-2" [text]="isEditMode ? 'Save Changes' : 'Create Question'" [type]="'submit'"
+                <app-button 
+                    class="mt-2" 
+                    [text]="    isEditMode ?
+                                'Save Changes' :
+                                'Create Question'" 
+                    [type]="'submit'"
                     [btnStyle]="'primary'">
 
                 </app-button>
