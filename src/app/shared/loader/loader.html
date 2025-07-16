@@ -1,6 +1,7 @@
 <div
   class="spinner-overlay"
   *ngIf="loading"
+  [ngClass]="{'d-none':!loading}"
   [@fade]
 >
   <div class="spinner"></div>

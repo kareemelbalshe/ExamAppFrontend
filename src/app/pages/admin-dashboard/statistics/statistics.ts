@@ -211,7 +211,8 @@ export class StatisticsComponent implements OnInit {
 
   fetchInsights() {
     this.dashboardService.getAiInsights().subscribe(res => {
-      const rawInsights = res?.data?.$values ?? [];
+      const rawInsights = res?.data?.$values.slice(0,6) ?? [];
+
 
       this.aiInsights = rawInsights.map((insight: any) => {
         const insightList = Array.isArray(insight.insights)

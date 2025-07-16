@@ -1,26 +1,42 @@
 <div class="container mt-4">
   <h2>Exams</h2>
 
-  <app-custom-input
+  <div class="w-25 float-end mx-4">
+    <app-custom-input
     placeholder="Search by name"
     [control]="searchControl"
     icon="fa-search"
     type="text"
   >
   </app-custom-input>
-
-  <div class="list-exams" *ngIf="activeExams.length > 0; else noExams">
-    <app-card *ngFor="let exam of activeExams" [exam]="exam"></app-card>
   </div>
 
-  <ng-template #noExams>
+  <!-- <div class="list-exams ">
+    @if (activeExams.length > 0) {
+    <app-card *ngFor="let exam of activeExams" [exam]="exam"></app-card>
+    }
+    <app-loader [loading]="loading"></app-loader>
+  </div> -->
+
+  <app-loader [loading]="loading"></app-loader>
+
+  <div class="list-exams position-relative" style="min-height: 200px;">
+    @if (activeExams.length > 0) {
+    <app-card *ngFor="let exam of activeExams" [exam]="exam"></app-card>
+    }
+  </div>
+
+  <ng-template *ngIf="!loading && activeExams.length===0">
     <p>No exams found.</p>
   </ng-template>
 
   <div
+    *ngIf="!loading"
     class="pagination mt-4 d-flex align-items-center justify-content-center gap-2 flex-wrap"
   >
-    <button [disabled]="page <= 1" (click)="goToPage(page - 1)">‹</button>
+    <button [disabled]="page <= 1" (click)="goToPage(page - 1)">
+      <i class="fas fa-chevron-left"></i>
+    </button>
 
     <ng-container *ngFor="let p of getPages()">
       <button
@@ -35,7 +51,7 @@
     </ng-container>
 
     <button [disabled]="page >= totalPages" (click)="goToPage(page + 1)">
-      ›
+      <i class="fas fa-chevron-right"></i>
     </button>
   </div>
 </div>

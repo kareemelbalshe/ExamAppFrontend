@@ -20,7 +20,23 @@ import { Confirm } from "./shared/confirm/confirm";
 })
 export class App {
   protected title = 'Exam System';
-  darkMode = localStorage.getItem('dark') === 'true';
+  darkMode: boolean = false;
+
+  ngOnInit() {
+    this.darkMode = localStorage.getItem('dark') === 'true';
+
+    window.addEventListener('themeChanged', this.handleThemeChange);
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('themeChanged', this.handleThemeChange);
+  }
+
+  handleThemeChange = (event: Event) => {
+    const customEvent = event as CustomEvent;
+    this.darkMode = customEvent.detail.dark;
+  };
+  // darkMode = localStorage.getItem('dark') === 'true';
   constructor(private router: Router) {
     router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
