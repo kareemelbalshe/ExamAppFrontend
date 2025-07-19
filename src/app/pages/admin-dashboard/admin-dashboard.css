@@ -3,7 +3,7 @@
   min-height: 100vh;
   background: #f5f5f5;
 }
-.dashboard-container-dark{
+.dashboard-container-dark {
   background: inherit !important;
 }
 
@@ -21,7 +21,6 @@
   margin-left: 220px;
   transition: margin-left 0.3s ease-in-out;
 }
-
 
 .sidebar.closed + .main-content {
   margin-left: 0;
