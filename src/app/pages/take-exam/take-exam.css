@@ -1,4 +1,15 @@
+.page{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+}
 
+.exam-container {
+  width: 80%;
+}
 
 .exam-header {
   text-align: center;
@@ -12,34 +23,9 @@
   position: relative;
   border-radius: 50%;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
-.timer-svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.timer-background {
-  fill: none;
-  stroke: #3c3a3a;
-  stroke-width: 10;
-}
-
-.timer-progress {
-  fill: none;
-  stroke-linecap: round;
-  stroke-width: 10;
-  stroke-dasharray: 282.6;
-  transition: stroke-dashoffset 1s linear;
-}
-
-.timer-text {
-  font-size: 18px;
-  /* fill: #fff; */
-  dominant-baseline: middle;
-  text-anchor: middle;
-  transform: rotate(90deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .exam-container {
@@ -62,4 +48,59 @@
 .question-nav .btn {
   min-width: 50px;
   font-weight: 500;
+}
+
+/* منع التحديد والنسخ */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+.timer-svg {
+  width: 120px;
+  height: 120px;
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.timer-background {
+  fill: none;
+  stroke: #e9ecef;
+  stroke-width: 4;
+}
+
+.timer-progress {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 283; /* 2 * π * 45 */
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s ease-in-out, stroke 0.3s ease;
+  animation: pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    stroke-width: 4;
+    filter: brightness(1);
+  }
+  100% {
+    stroke-width: 5;
+    filter: brightness(1.1);
+  }
+}
+
+.timer-text {
+  fill: #333;
+  font-size: 12px;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  transform: rotate(90deg);
+  transform-origin: 50px 50px;
 }

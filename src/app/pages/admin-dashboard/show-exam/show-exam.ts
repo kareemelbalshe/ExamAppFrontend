@@ -104,27 +104,22 @@ export class ShowExam implements OnInit {
   }
 
   toggleExpand(questionId: number) {
-    if (this.expandedQuestionIds
-            .has(questionId)) {
-      this.expandedQuestionIds
-          .delete(questionId);
+    if (this.expandedQuestionIds.has(questionId)) {
+      this.expandedQuestionIds.delete(questionId);
     } else {
-      this.expandedQuestionIds
-          .add(questionId);
+      this.expandedQuestionIds.add(questionId);
     }
   }
 
   isExpanded(questionId: number): boolean {
-    return  this.expandedQuestionIds
-                .has(questionId);
+    return this.expandedQuestionIds.has(questionId);
   }
 
   onDelete(questionId: number) {
     this.confirmService.show(
       'Delete Question',
       'Are you sure you want to delete this question?',
-      () => this
-              .onDeleteConfirm(questionId),
+      () => this.onDeleteConfirm(questionId),
       {
         okText: 'Delete',
         isSuccess: false,
@@ -132,32 +127,28 @@ export class ShowExam implements OnInit {
     );
   }
   onDeleteConfirm = (questionId: number) => {
-    this.questionsService.deleteQuestion(questionId)
-                          .subscribe({
-                            next: () => this.loadQuestions(),
-                            error: (error) => {
-                              this.confirmService
-                                .show(
-                                    'Error',
-                                    `Failed to delete question. Please try again.`,
-                                    () => {},
-                                    {
-                                      okText: 'Ok',
-                                      isSuccess: false,
-                                      isPrompt: true,
-                                    }
-                                  );
-                            },
-                          });
+    this.questionsService.deleteQuestion(questionId).subscribe({
+      next: () => this.loadQuestions(),
+      error: (error) => {
+        this.confirmService.show(
+          'Error',
+          `Failed to delete question. Please try again.`,
+          () => {},
+          {
+            okText: 'Ok',
+            isSuccess: false,
+            isPrompt: true,
+          }
+        );
+      },
+    });
   };
 
   onEdit(question: QuestionDto) {
-    this.router
-        .navigateByUrl(`/dashboard/question/edit/${question.id}`);
+    this.router.navigateByUrl(`/dashboard/question/edit/${question.id}`);
   }
 
   onAdd() {
-    this.router
-        .navigateByUrl(`/dashboard/question/add/${this.examId}`);
+    this.router.navigateByUrl(`/dashboard/question/add/${this.examId}`);
   }
 }

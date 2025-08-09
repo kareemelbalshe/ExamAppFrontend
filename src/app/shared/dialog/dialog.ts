@@ -31,7 +31,6 @@ import { DatePipe } from '@angular/common';
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    Button,
   ],
   templateUrl: './dialog.html',
   styleUrls: ['./dialog.css'],

@@ -14,6 +14,7 @@ import { ConfirmService } from '../../services/confirm.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Answer } from '../../services/answer/answer';
+import { ToastService } from '../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-take-exam',
@@ -36,6 +37,7 @@ export class TakeExam implements OnInit, OnDestroy {
   color: string = '#28a745';
   choices: { [questionId: number]: number } = {};
   currentIndex: number = 0;
+  isTimerStarted: boolean = false;
 
   constructor(
     private questionsService: QuestionService,
@@ -44,11 +46,11 @@ export class TakeExam implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private confirmService: ConfirmService,
+    private toastService: ToastService,
     private answerService: Answer
   ) {}
 
   ngOnInit() {
-    // 🛡️ حماية من الخروج أو الرجوع
     document.addEventListener('contextmenu', this.disableContextMenu);
     document.body.classList.add('no-select');
     this.enterFullscreen();
@@ -68,7 +70,14 @@ export class TakeExam implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     document.removeEventListener('contextmenu', this.disableContextMenu);
     document.body.classList.remove('no-select');
-    clearInterval(this.intervalId);
+    this.clearTimer();
+  }
+
+  private clearTimer(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
   }
 
   disableContextMenu = (event: MouseEvent) => {
@@ -91,7 +100,9 @@ export class TakeExam implements OnInit, OnDestroy {
   enterFullscreen() {
     const elem = document.documentElement;
     if (elem.requestFullscreen) {
-      elem.requestFullscreen();
+      elem.requestFullscreen().catch((err) => {
+        console.log('Error entering fullscreen:', err);
+      });
     } else if ((<any>elem).webkitRequestFullscreen) {
       (<any>elem).webkitRequestFullscreen();
     } else if ((<any>elem).msRequestFullscreen) {
@@ -105,10 +116,18 @@ export class TakeExam implements OnInit, OnDestroy {
       next: (exam) => {
         this.exam = exam;
         this.isLoading = false;
-        this.startTimer();
+
+        if (this.exam?.startTime && this.exam?.endTime) {
+          this.startTimer();
+        } else {
+          console.error('Exam start time or end time is missing');
+          this.error = 'Exam timing information is not available';
+        }
+
         this.cdr.detectChanges();
       },
       error: (err) => {
+        console.error('Error loading exam:', err);
         this.error = 'Failed to load exam';
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -132,7 +151,8 @@ export class TakeExam implements OnInit, OnDestroy {
           this.isLoading = false;
           this.cdr.detectChanges();
         },
-        error: () => {
+        error: (err) => {
+          console.error('Error loading questions:', err);
           this.error = 'Failed to load questions';
           this.isLoading = false;
           this.cdr.detectChanges();
@@ -141,39 +161,95 @@ export class TakeExam implements OnInit, OnDestroy {
   }
 
   startTimer() {
-    if (!this.exam?.startTime || !this.exam?.endTime) return;
+    if (this.isTimerStarted) return;
 
-    const now = new Date();
-    const start = new Date(this.exam.startTime);
-    const end = new Date(this.exam.endTime);
+    if (!this.exam?.startTime || !this.exam?.endTime) {
+      console.error('Cannot start timer: missing start or end time');
+      return;
+    }
 
-    this.totalSeconds = Math.floor((end.getTime() - start.getTime()) / 1000);
-    this.remainingSeconds = Math.floor((end.getTime() - now.getTime()) / 1000);
+    try {
+      const now = new Date();
+      const start = new Date(this.exam.startTime);
+      const end = new Date(this.exam.endTime);
 
-    this.updateDisplay();
-    this.intervalId = setInterval(() => {
-      this.remainingSeconds--;
+      this.totalSeconds = Math.floor((end.getTime() - start.getTime()) / 1000);
+      this.remainingSeconds = Math.floor(
+        (end.getTime() - now.getTime()) / 1000
+      );
+
       if (this.remainingSeconds <= 0) {
+        console.log('User entered after official exam time. Allowing exam.');
+        this.totalSeconds = 0;
         this.remainingSeconds = 0;
-        clearInterval(this.intervalId);
-        this.submitExam(); // ⏰ انتهى الوقت
+        return;
       }
+
+      if (now < start) {
+        console.log('Exam has not started yet');
+        this.error = 'The exam has not started yet';
+        return;
+      }
+
+      this.isTimerStarted = true;
+
       this.updateDisplay();
-    }, 1000);
+      this.intervalId = setInterval(() => {
+        this.remainingSeconds--;
+
+        if (this.remainingSeconds <= 0) {
+          this.remainingSeconds = 0;
+          this.clearTimer();
+
+          this.toastService.show(
+            'The exam has ended. your answers will be submitted automatically.',
+            'info',
+            3000
+          );
+
+          this.submitExam(true);
+          return;
+        }
+
+        this.updateDisplay();
+      }, 1000);
+    } catch (error) {
+      console.error('Error starting timer:', error);
+      this.error = 'An error occurred while starting the timer';
+    }
   }
 
   updateDisplay() {
-    const percentage = this.remainingSeconds / this.totalSeconds;
+    if (this.totalSeconds === 0) return;
+
+    const percentage = Math.max(0, this.remainingSeconds / this.totalSeconds);
+
     const circumference = 2 * Math.PI * 45;
     this.dashOffset = circumference * (1 - percentage);
 
-    const minutes = Math.floor(this.remainingSeconds / 60);
-    const seconds = this.remainingSeconds % 60;
+    const minutes = Math.floor(Math.abs(this.remainingSeconds) / 60);
+    const seconds = Math.abs(this.remainingSeconds) % 60;
     this.displayTime = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
 
-    if (percentage < 0.2) this.color = '#dc3545';
-    else if (percentage < 0.5) this.color = '#ffc107';
-    else this.color = '#28a745';
+    if (percentage < 0.1) {
+      this.color = '#dc3545';
+    } else if (percentage < 0.25) {
+      this.color = '#ffc107';
+    } else {
+      this.color = '#667eea';
+    }
+
+    setTimeout(() => {
+      const timerContainer = document.querySelector('.timer-circle-container');
+      if (timerContainer) {
+        timerContainer.classList.remove('warning', 'danger');
+        if (percentage < 0.1) {
+          timerContainer.classList.add('danger');
+        } else if (percentage < 0.25) {
+          timerContainer.classList.add('warning');
+        }
+      }
+    }, 0);
   }
 
   get currentQuestion(): QuestionDto | undefined {
@@ -181,14 +257,14 @@ export class TakeExam implements OnInit, OnDestroy {
   }
 
   goToQuestion(index: number) {
-    this.currentIndex = index;
+    if (index >= 0 && index < this.questions.length) {
+      this.currentIndex = index;
+    }
   }
 
   nextQuestion() {
     if (this.currentIndex < this.questions.length - 1) {
       this.currentIndex++;
-    } else {
-      this.submitExam();
     }
   }
 
@@ -198,16 +274,29 @@ export class TakeExam implements OnInit, OnDestroy {
     }
   }
 
-  submitExam() {
-    this.confirmService.show(
-      'Confirm Submit',
-      'Are you sure you want to submit your exam?',
-      this.submitConfirmed
-    );
+  submitExam(autoSubmit: boolean = false) {
+    this.clearTimer();
+
+    if (autoSubmit) {
+      this.submitConfirmed();
+    } else {
+      this.confirmService.show(
+        'Confirm Submission',
+        'Are you sure you want to submit the exam?',
+        this.submitConfirmed
+      );
+    }
   }
 
   submitConfirmed = () => {
     const resultId = +localStorage.getItem('resultId')!;
+
+    if (!resultId) {
+      console.error('Result ID not found in localStorage');
+      this.error = 'Error: Result ID not found';
+      return;
+    }
+
     const resultsToSubmit = Object.entries(this.choices).map(
       ([questionIdStr, choiceId]) => ({
         resultId: resultId,
@@ -216,14 +305,24 @@ export class TakeExam implements OnInit, OnDestroy {
       })
     );
 
+    console.log('Submitting answers:', resultsToSubmit);
+
     this.answerService.createAnswer(resultsToSubmit).subscribe({
       next: (res: any) => {
-        document.exitFullscreen();
+        console.log('Exam submitted successfully:', res);
+
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch((err) => {
+            console.log('Error exiting fullscreen:', err);
+          });
+        }
+
         localStorage.removeItem('resultId');
         this.router.navigate([`/show-result/${res.data.id}`]);
       },
       error: (err) => {
         console.error('Error submitting answer:', err);
+        this.error = 'An error occurred while submitting the exam';
       },
     });
   };
