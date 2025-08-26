@@ -141,10 +141,11 @@ export class TakeExam implements OnInit, OnDestroy {
       .getQuestionsByExamIdWithChoices(this.examId)
       .subscribe({
         next: (response) => {
-          let responseQuestions = response?.data?.$values || [];
+          console.log('Questions:', response);
+          let responseQuestions = response?.data || [];
           this.questions = Array.isArray(responseQuestions)
             ? responseQuestions.map((q: any) => {
-                q.choices = q?.choices?.$values || [];
+                q.choices = q?.choices || [];
                 return q;
               })
             : [];

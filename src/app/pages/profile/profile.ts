@@ -106,7 +106,8 @@ export class Profile implements OnInit {
     this.resultService.getResultByStudentId(this.studentId).subscribe({
       next: (result) => {
         console.log('Result:', result);
-        this.results = result?.data?.$values?.filter(result => result.exam?.id != null && result.exam?.id != undefined) || [];
+        // this.results = result?.data?.$values?.filter(result => result.exam?.id != null && result.exam?.id != undefined) || [];
+        this.results = result?.data.reverse()
         this.cdr.detectChanges(); // Ensure the view is updated with the results data
       },
       error: (err) => {

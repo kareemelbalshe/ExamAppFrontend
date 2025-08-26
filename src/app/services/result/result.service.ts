@@ -2,12 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { Result, ResultWithDetails } from '../../models/result';
+import { Observable, tap } from 'rxjs';
 
-interface ResultResponse {
-  data: {
-    $values: ResultWithDetails[];
-  };
-}
 @Injectable({
   providedIn: 'root',
 })
@@ -16,10 +12,14 @@ export class ResultService {
 
   constructor(private http: HttpClient) {}
 
-  getResultByStudentId(studentId: number) {
-    return this.http.get<ResultResponse>(
-      `${this.baseUrl}/Result/by-student/detailed/${studentId}`
-    );
+  getResultByStudentId(studentId: number): Observable<any> {
+    return this.http
+      .get(`${this.baseUrl}/Result/by-student/detailed/${studentId}`)
+      .pipe(
+        tap((res: any) => {
+          console.log('res', res);
+        })
+      );
   }
   createResult(result: Result) {
     return this.http.post(`${this.baseUrl}/Result`, result);

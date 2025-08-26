@@ -6,12 +6,19 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { CustomInput } from '../../shared/custom-input/custom-input';
 import { Card } from './components/card/card';
-import { Loader } from "../../shared/loader/loader";
+import { Loader } from '../../shared/loader/loader';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, CustomInput, Card, Loader],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CustomInput,
+    Card,
+    Loader,
+  ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -27,8 +34,7 @@ export class Home implements OnInit {
   totalCount: number = 0;
   isActive: boolean = false;
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
-
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   darkMode: boolean = false;
   ngOnInit(): void {
@@ -42,10 +48,12 @@ export class Home implements OnInit {
     });
 
     this.getExams();
+    console.log(this.exams);
   }
 
   get activeExams(): Exam[] {
-    return this.exams.filter(exam => exam.isActive);
+    // return this.exams.filter((exam) => exam.isActive);
+    return this.exams;
   }
 
   get totalPages(): number {
@@ -84,8 +92,9 @@ export class Home implements OnInit {
 
     this.http.get<any>(url).subscribe({
       next: (res) => {
+        console.log('Exams:', res);
         const dataLayer = res?.data;
-        this.exams = dataLayer?.data?.$values || [];
+        this.exams = dataLayer?.data || [];
         this.totalCount = dataLayer?.totalCount || 0;
         this.loading = false;
         this.cdr.detectChanges();
@@ -96,9 +105,6 @@ export class Home implements OnInit {
       },
     });
   }
-
-
-
 
   ngOnDestroy() {
     window.removeEventListener('themeChanged', this.handleThemeChange);

@@ -7,7 +7,7 @@ import {
   style,
   animate,
   query,
-  stagger
+  stagger,
 } from '@angular/animations';
 import { Location } from '@angular/common';
 import { ResultWithDetails } from '../../../models/result';
@@ -17,7 +17,7 @@ import { StudentService } from '../../../services/student/student';
 
 @Component({
   selector: 'app-show-result',
-  imports: [CommonModule,],
+  imports: [CommonModule],
   templateUrl: './show-result.html',
   styleUrl: './show-result.css',
   animations: [
@@ -41,7 +41,6 @@ import { StudentService } from '../../../services/student/student';
   ],
 })
 export class ShowResults {
-
   results: ResultWithDetails[] = [];
   student?: Student;
   studentId?: number;
@@ -53,7 +52,7 @@ export class ShowResults {
     private router: Router,
     private activeRoute: ActivatedRoute,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params) => {
@@ -102,7 +101,9 @@ export class ShowResults {
     this.resultService.getResultByStudentId(this.studentId).subscribe({
       next: (result) => {
         console.log('Result:', result);
-        this.results = result?.data?.$values?.filter(result => result.exam?.id != null && result.exam?.id != undefined) || [];
+        // this.results = result?.data?.$values?.filter(result => result.exam?.id != null && result.exam?.id != undefined) || [];
+        this.results = result?.data.$values || [];
+
         this.cdr.detectChanges();
       },
       error: (err) => {
