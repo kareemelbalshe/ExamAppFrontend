@@ -258,7 +258,6 @@ export class TakeExam implements OnInit, OnDestroy {
   }
 
   goToQuestion(index: number) {
-    console.log('choicesCount', this.choices);
     if (index >= 0 && index < this.questions.length) {
       this.currentIndex = index;
     }
