@@ -7,7 +7,6 @@ import { environment } from '../environments/environment.development';
   providedIn: 'root',
 })
 export class Auth {
-  role: string = '';
   private baseUrl = environment.baseUrl;
 
   private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated());
@@ -21,7 +20,7 @@ export class Auth {
   login(payload: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/User/login`, payload).pipe(
       tap((response: any) => {
-        this.role = response.data.role;
+        localStorage.setItem('role', response.data.role);
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userId', response.data.id);
         this.loggedIn.next(true);
@@ -46,6 +45,6 @@ export class Auth {
   }
 
   isAdmin(): boolean {
-    return this.role === 'Admin';
+    return localStorage.getItem('role') === 'Admin';
   }
 }

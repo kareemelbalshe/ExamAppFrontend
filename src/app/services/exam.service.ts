@@ -38,7 +38,7 @@ export class ExamService {
       map(res => {
         const data = res?.data;
         return {
-          items: data?.data?.$values || [], 
+          items: data?.data || [],
           totalItems: data?.totalCount || 0,
           totalPages: Math.ceil((data?.totalCount || 0) / pageSize),
           currentPage: data?.page || 1,

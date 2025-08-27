@@ -81,6 +81,7 @@ export class AllExams implements OnInit {
         next: (res) => {
 
           this.exams = res.items;
+          console.log("exams", this.exams);
           this.paginationInfo.totalItems = res.totalItems;
           this.paginationInfo.totalPages = res.totalPages;
           this.paginationInfo.currentPage = res.currentPage;
