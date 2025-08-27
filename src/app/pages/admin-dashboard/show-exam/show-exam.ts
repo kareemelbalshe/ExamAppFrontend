@@ -78,14 +78,14 @@ export class ShowExam implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Questions loaded:', response.data);
-          let responseQuestions = response?.data?.$values || [];
+          let responseQuestions = response?.data || [];
           if (!Array.isArray(responseQuestions)) {
             this.questions = [];
           } else {
             let extractedQuestions = responseQuestions.map((q: any) => {
-              console.log('Choices for question:', q?.choices.$values);
+              console.log('Choices for question:', q?.choices);
 
-              q.choices = q?.choices?.$values || [];
+              q.choices = q?.choices || [];
               return q;
             });
             this.questions = extractedQuestions;

@@ -228,29 +228,29 @@ export class TakeExam implements OnInit, OnDestroy {
     const circumference = 2 * Math.PI * 45;
     this.dashOffset = circumference * (1 - percentage);
 
-    const minutes = Math.floor(Math.abs(this.remainingSeconds) / 60);
-    const seconds = Math.abs(this.remainingSeconds) % 60;
-    this.displayTime = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    const absSeconds = Math.abs(this.remainingSeconds);
+    const days = Math.floor(absSeconds / (24 * 3600));
+    const hours = Math.floor((absSeconds % (24 * 3600)) / 3600);
+    const minutes = Math.floor((absSeconds % 3600) / 60);
+    const seconds = absSeconds % 60;
 
-    if (percentage < 0.1) {
-      this.color = '#dc3545';
-    } else if (percentage < 0.25) {
-      this.color = '#ffc107';
+    if (days > 0) {
+      this.displayTime = `${days}d ${hours}h ${minutes}m ${
+        seconds < 10 ? '0' + seconds : seconds
+      }s`;
+    } else if (hours > 0) {
+      this.displayTime = `${hours}h ${minutes}m ${
+        seconds < 10 ? '0' + seconds : seconds
+      }s`;
     } else {
-      this.color = '#667eea';
+      this.displayTime = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
     }
 
-    setTimeout(() => {
-      const timerContainer = document.querySelector('.timer-circle-container');
-      if (timerContainer) {
-        timerContainer.classList.remove('warning', 'danger');
-        if (percentage < 0.1) {
-          timerContainer.classList.add('danger');
-        } else if (percentage < 0.25) {
-          timerContainer.classList.add('warning');
-        }
-      }
-    }, 0);
+    this.cdr.detectChanges();
+  }
+
+  get choicesCount(): number {
+    return Object.keys(this.choices).length;
   }
 
   get currentQuestion(): QuestionDto | undefined {
@@ -258,6 +258,7 @@ export class TakeExam implements OnInit, OnDestroy {
   }
 
   goToQuestion(index: number) {
+    console.log('choicesCount', this.choices);
     if (index >= 0 && index < this.questions.length) {
       this.currentIndex = index;
     }

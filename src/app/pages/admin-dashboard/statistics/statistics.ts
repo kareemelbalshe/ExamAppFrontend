@@ -218,7 +218,7 @@ export class StatisticsComponent implements OnInit {
   fetchStudentsChart() {
     this.dashboardService.getStudentsPerMonth().subscribe((res) => {
       const values = res?.data;
-      console.log(res.data);
+      console.log("students", values);
       this.barChartLabels = values.map((m: any) => m.month);
       this.barChartData = {
         labels: this.barChartLabels,
@@ -239,11 +239,12 @@ export class StatisticsComponent implements OnInit {
   fetchInsights() {
     this.dashboardService.getAiInsights().subscribe((res) => {
       const rawInsights = res?.data.slice(0, 6) ?? [];
+      console.log("insights", rawInsights);
 
       this.aiInsights = rawInsights.map((insight: any) => {
         const insightList = Array.isArray(insight.insights)
           ? insight.insights
-          : insight.insights ?? [];
+          : insight.insights.$values ?? [];
 
         const level = insightList.some(
           (t: string) =>
@@ -275,6 +276,7 @@ export class StatisticsComponent implements OnInit {
   fetchPredictions() {
     this.dashboardService.getPredictions().subscribe((res) => {
       const predictions = res?.data ?? [];
+      console.log("predictions", predictions);
       this.predictions = predictions;
 
       const labels = predictions.map((p: any) => p.examTitle);

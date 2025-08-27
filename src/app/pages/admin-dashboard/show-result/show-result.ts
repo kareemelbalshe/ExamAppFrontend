@@ -102,7 +102,7 @@ export class ShowResults {
       next: (result) => {
         console.log('Result:', result);
         // this.results = result?.data?.$values?.filter(result => result.exam?.id != null && result.exam?.id != undefined) || [];
-        this.results = result?.data.$values || [];
+        this.results = result?.data || [];
 
         this.cdr.detectChanges();
       },

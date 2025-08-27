@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-   display: none;
+  display: none;
 }
 
 .toast.show {
@@ -30,10 +30,18 @@
   color: #eee;
 }
 
-.toast.success { background-color: #4caf50; }
-.toast.error { background-color: #f44336; }
-.toast.info { background-color: #2196f3; }
-.toast.warning { background-color: #ff9800; }
+.toast.success {
+  background-color: #4caf50;
+}
+.toast.error {
+  background-color: #f44336;
+}
+.toast.info {
+  background-color: #2196f3;
+}
+.toast.warning {
+  background-color: #ff9800;
+}
 
 .icon {
   font-size: 1.5rem;
